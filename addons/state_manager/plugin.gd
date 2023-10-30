@@ -13,14 +13,12 @@ const states = {
 # Icons
 const icons = {
 	state_manager = preload("res://addons/state_manager/icons/state_manager.png"),
-	state = preload("res://addons/state_manager/icons/state.png"),
 	state_condition = preload("res://addons/state_manager/icons/state_condition.png"),
 	state_timer = preload("res://addons/state_manager/icons/state_timer.png"),
 	state_rand_timer = preload("res://addons/state_manager/icons/state_rand_timer.png")
 }
 
 func _enter_tree():
-	#add_custom_type("State", "Node", states.state, icons.state)
 	add_custom_type("StateManager", "Node", state_manager, icons.state_manager)
 	add_custom_type("StateCondition", "State", states.state_condition, icons.state_condition)
 	add_custom_type("StateTimer", "State", states.state_timer, icons.state_timer)
@@ -28,8 +26,7 @@ func _enter_tree():
 
 
 func _exit_tree():
-	remove_custom_type("StateRandTimer")
-	remove_custom_type("StateTimer")
-	remove_custom_type("StateCondition")
 	remove_custom_type("StateManager")
-	#remove_custom_type("State")
+	remove_custom_type("StateCondition")
+	remove_custom_type("StateTimer")
+	remove_custom_type("StateRandTimer")
