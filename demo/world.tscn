@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3 uid="uid://c4mgeue2m1r3p"]
+
+[ext_resource type="PackedScene" uid="uid://cs378gvb4ew6o" path="res://demo/character.tscn" id="1_7pyvf"]
+[ext_resource type="Texture2D" uid="uid://ddl2hc4xvlqtj" path="res://demo/sprites/white.png" id="2_c5tax"]
+[ext_resource type="Script" path="res://demo/Target.gd" id="3_0nnx0"]
+[ext_resource type="Shape2D" uid="uid://dh71pprojldq4" path="res://demo/resources/shape.tres" id="4_jdslu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v64gy"]
+size = Vector2(1152, 70)
+
+[node name="World" type="Node2D"]
+
+[node name="Character" parent="." instance=ExtResource("1_7pyvf")]
+position = Vector2(619, 531)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(576, 613)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_v64gy")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+scale = Vector2(1152, 70)
+texture = ExtResource("2_c5tax")
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="Target" type="Area2D" parent="Targets" groups=["target"]]
+position = Vector2(40, 478)
+script = ExtResource("3_0nnx0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/Target"]
+shape = ExtResource("4_jdslu")
+
+[node name="Target2" type="Area2D" parent="Targets" groups=["target"]]
+position = Vector2(1102, 478)
+script = ExtResource("3_0nnx0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/Target2"]
+shape = ExtResource("4_jdslu")
+
+[node name="StateLabel" type="Label" parent="." groups=["state_label"]]
+offset_left = 6.0
+offset_right = 640.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 50
+text = "safsafsaf"
