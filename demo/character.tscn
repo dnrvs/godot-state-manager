@@ -183,5 +183,3 @@ tag = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_tda6u")
-
-[connection signal="state_changed" from="StateManager" to="." method="_on_state_manager_state_changed"]
