@@ -37,6 +37,7 @@ func _get_configuration_warnings():
 
 func _process(_delta):
 	if not Engine.is_editor_hint():
+		super(_delta)
 		if is_state_processing():
 			var _node_property = get_node(node_path).get(property_name)
 			var _condition = null

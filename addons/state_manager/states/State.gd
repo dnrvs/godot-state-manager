@@ -3,6 +3,8 @@ extends Node
 
 class_name State
 
+signal started_state
+signal processing_state
 signal finished_state
 
 @export var tag: String = "" :
@@ -10,6 +12,7 @@ signal finished_state
 		if n_tag != tag:
 			tag = n_tag
 			update_configuration_warnings()
+
 var _is_processing: bool = false : 
 	set(val):
 		if val == true:
@@ -36,8 +39,14 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 func start() -> void:
 	_is_processing = true
+	started_state.emit()
 func stop() -> void:
 	_is_processing = false
+
+func _process(_delta) -> void:
+	if not Engine.is_editor_hint():
+		if _is_processing:
+			processing_state.emit()
 
 func is_state_processing() -> bool:
 	return _is_processing
@@ -46,6 +55,6 @@ func is_finished() -> bool:
 
 func _finish_state() -> void:
 	_is_finished = true
-	emit_signal("finished_state")
+	finished_state.emit()
 func force_finish_state() -> void:
 	_finish_state()

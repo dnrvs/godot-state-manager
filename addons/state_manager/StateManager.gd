@@ -2,8 +2,6 @@
 extends Node
 class_name StateManager
 
-signal state_changed(state_tag)
-
 var _states: Array[State]
 var _current_state_index: int = 0
 var _states_path: Array
@@ -81,7 +79,6 @@ func _next_state() -> void:
 	var max_indx = _states.size()-1 if one_loop else _states.size()-2
 	if _current_state_index > max_indx:
 		_current_state_index = 0
-	state_changed.emit(_get_current_state().tag)
 	_get_current_state().start()
 func force_next_state() -> void:
 	_get_current_state().force_finish_state()
