@@ -10,6 +10,8 @@ var direction: int = 1
 var final_direction: int = direction
 
 func _enter_tree() -> void:
+	$StateManager/WalkUntilCollide.condition_callable = collided_with_target
+	
 	$StateManager/WalkUntilCollide.started_state.connect(func ():
 		direction *= -1
 		final_direction = direction

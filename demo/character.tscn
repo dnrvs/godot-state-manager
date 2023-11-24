@@ -162,8 +162,7 @@ script = ExtResource("29_cxfat")
 
 [node name="WalkUntilCollide" type="Node" parent="StateManager"]
 script = ExtResource("30_qekkf")
-node_path = NodePath("../..")
-property_name = "collided_with_target"
+condition_callable = Callable()
 negative_condition = true
 tag = "walk_until_collide"
 
