@@ -11,7 +11,6 @@ class_name StateCondition
 
 func _process(_delta):
 	if not Engine.is_editor_hint():
-		print(condition_callable.call())
 		if is_state_processing():
 			if condition_callable.call() != null:
 				var _condition = condition_callable.call()
