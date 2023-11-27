@@ -29,16 +29,15 @@ func _get_configuration_warnings() -> PackedStringArray:
 	
 	return warnings
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		child_entered_tree.connect(_on_child_entered_tree)
 		var final_state = _FinalState.new()
 		final_state.tag = "final_state"
 		add_child(final_state)
-		for child in get_children():
-			assert(child is State, "Invalid state: "+child.name)
-			if not child is _FinalState:
-				_add_state_to_loop(child)
+
+func _ready() -> void:
+	if not Engine.is_editor_hint():
 		if autostart:
 			start()
 
@@ -86,8 +85,8 @@ func force_next_state() -> void:
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not Engine.is_editor_hint():
-		if node is State:
-			_add_state_to_loop(node)
+		assert(node is State, "Invalid state: " + node.name)
+		_add_state_to_loop(node)
 
 func _on_state_finished() -> void:
 	_next_state()
