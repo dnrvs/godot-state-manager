@@ -73,6 +73,7 @@ func get_current_state_tag() -> String:
 func _next_state() -> void:
 	if !_get_current_state().is_finished():
 		return
+	
 	_current_state_index += 1
 	
 	var max_indx = _states.size()-1 if one_loop else _states.size()-2

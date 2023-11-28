@@ -28,8 +28,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	
 	if get_child_count() > 0:
 		warnings.append("This node is not designed to contain other nodes.")
-	if not get_parent() is StateManager:
-		warnings.append("This node is designed to be a child of a StateManager.")
+	if not get_parent() is StateManager and not get_parent() is StateGroup:
+		warnings.append("This node is designed to be a child of a StateManager or a StateStage.")
 	
 	if tag == "":
 		warnings.append("Please set 'tag' to a non-empty value.")
