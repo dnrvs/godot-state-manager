@@ -182,3 +182,12 @@ tag = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_tda6u")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="StateLabel" type="Label" parent="CanvasLayer" groups=["state_label"]]
+offset_left = 6.0
+offset_right = 640.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 32
+text = "walk_until_collide"

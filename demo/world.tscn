@@ -11,7 +11,7 @@ size = Vector2(1152, 70)
 [node name="World" type="Node2D"]
 
 [node name="Character" parent="." instance=ExtResource("1_7pyvf")]
-position = Vector2(619, 531)
+position = Vector2(576, 531)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(576, 613)
@@ -39,9 +39,3 @@ script = ExtResource("3_0nnx0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/Target2"]
 shape = ExtResource("4_jdslu")
-
-[node name="StateLabel" type="Label" parent="." groups=["state_label"]]
-offset_left = 6.0
-offset_right = 640.0
-offset_bottom = 72.0
-theme_override_font_sizes/font_size = 50
