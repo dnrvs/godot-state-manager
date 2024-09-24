@@ -1,6 +1,6 @@
 @tool
 extends State
-class_name StateCondition
+#class_name StateCondition
 
 func _init() -> void:
 	self.condition_callable = func (): return false
