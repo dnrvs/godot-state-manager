@@ -35,7 +35,8 @@ func start() -> void:
 	if _states.size() <= 0:
 		_finish_state()
 		return
-	_get_current_state().start()
+	
+	_start_state()
 
 func stop() -> void:
 	super()
@@ -51,11 +52,23 @@ func _add_state_to_loop(state: State) -> void:
 	state.finished_state.connect(_on_state_finished)
 
 func _on_state_finished() -> void:
-	if !_get_current_state().is_finished():
+	if _get_current_state().is_state_processing():
 		return
 	_current_state_index += 1
-	if _current_state_index > _states.size()-1:
-		_current_state_index = 0
-		_finish_state()
-	else:
-		_get_current_state().start()
+	_start_state()
+
+func force_finish_state() -> void:
+	super()
+	_get_current_state().force_finish_state()
+
+func _start_state() -> void:
+	while true:
+		if _get_current_state().check_condition():
+			_get_current_state().start()
+			break
+		else:
+			_current_state_index += 1
+			if _current_state_index > _states.size()-1:
+				_current_state_index = 0
+				_finish_state()
+				break

@@ -29,9 +29,9 @@
 [ext_resource type="Texture2D" uid="uid://bkax64tw2b24s" path="res://demo/sprites/walk/walk8.png" id="19_uye0q"]
 [ext_resource type="Texture2D" uid="uid://ct5xxymn8py66" path="res://demo/sprites/jump/jump3.png" id="20_fdjdb"]
 [ext_resource type="Script" path="res://addons/state_manager/StateManager.gd" id="29_cxfat"]
-[ext_resource type="Script" path="res://addons/state_manager/states/StateCondition.gd" id="30_qekkf"]
 [ext_resource type="Script" path="res://addons/state_manager/states/StateTimer.gd" id="31_nr1xs"]
 [ext_resource type="Script" path="res://addons/state_manager/states/StateRandTimer.gd" id="32_tumqd"]
+[ext_resource type="Script" path="res://addons/state_manager/states/State.gd" id="33_ggcl0"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qfdj2"]
 animations = [{
@@ -161,7 +161,7 @@ shape = SubResource("CapsuleShape2D_rxrfj")
 script = ExtResource("29_cxfat")
 
 [node name="WalkUntilCollide" type="Node" parent="StateManager"]
-script = ExtResource("30_qekkf")
+script = ExtResource("33_ggcl0")
 condition_callable = Callable()
 negative_condition = true
 tag = "walk_until_collide"
@@ -169,12 +169,14 @@ tag = "walk_until_collide"
 [node name="Attack" type="Node" parent="StateManager"]
 script = ExtResource("31_nr1xs")
 wait_time = 0.3
+condition_callable = Callable()
 tag = "attack"
 
 [node name="Idle" type="Node" parent="StateManager"]
 script = ExtResource("32_tumqd")
 from = 3.0
 to = 6.0
+condition_callable = Callable()
 tag = "idle"
 
 [node name="Area2D" type="Area2D" parent="."]

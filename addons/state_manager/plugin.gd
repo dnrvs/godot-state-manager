@@ -3,8 +3,8 @@ extends EditorPlugin
 
 # Scripts
 const state_manager = preload("res://addons/state_manager/StateManager.gd")
+const state = preload("res://addons/state_manager/states/State.gd")
 const states = {
-	state = preload("res://addons/state_manager/states/State.gd"),
 	state_group = preload("res://addons/state_manager/states/StateGroup.gd"),
 	state_condition = preload("res://addons/state_manager/states/StateCondition.gd"),
 	state_timer = preload("res://addons/state_manager/states/StateTimer.gd"),
@@ -21,7 +21,10 @@ const icons = {
 }
 
 func _enter_tree():
+	var feature_profie := EditorFeatureProfile.new()
+	
 	add_custom_type("StateManager", "Node", state_manager, icons.state_manager)
+	add_custom_type("State", "Node", state, icons.state_condition)
 	add_custom_type("StateGroup", "State", states.state_group, icons.state_group)
 	add_custom_type("StateCondition", "State", states.state_condition, icons.state_condition)
 	add_custom_type("StateTimer", "StateTimeBase", states.state_timer, icons.state_timer)
@@ -30,6 +33,7 @@ func _enter_tree():
 
 func _exit_tree():
 	remove_custom_type("StateManager")
+	remove_custom_type("State")
 	remove_custom_type("StateGroup")
 	remove_custom_type("StateCondition")
 	remove_custom_type("StateTimer")

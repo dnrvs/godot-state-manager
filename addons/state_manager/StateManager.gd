@@ -15,6 +15,8 @@ var _has_final_state: bool = false
 
 class _FinalState extends State:
 	pass
+	#func _init() -> void:
+	#	self.condition_callable = func (): return true
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
@@ -47,7 +49,10 @@ func start() -> void:
 		return
 	if _get_current_state() is _FinalState:
 		_current_state_index = 0
-	_get_current_state().start()
+	
+	_current_state_index -= 1
+	_next_state()
+	#_get_current_state().start()
 	_is_processing = true
 func stop() -> void:
 	if not _is_processing:
@@ -67,11 +72,15 @@ func _add_state_to_loop(state: State) -> void:
 	state.finished_state.connect(_on_state_finished)
 func _get_current_state() -> State:
 	return _states[_current_state_index]
+func _start_current_state() -> void:
+	var _condition_result = _get_current_state().check_condition()
+	if _condition_result:
+		_get_current_state().start()
 func get_current_state_tag() -> String:
 	return _get_current_state().tag
 
 func _next_state() -> void:
-	if !_get_current_state().is_finished():
+	if _get_current_state().is_state_processing() and not _get_current_state() is _FinalState:
 		return
 	
 	_current_state_index += 1
@@ -79,7 +88,12 @@ func _next_state() -> void:
 	var max_indx = _states.size()-1 if one_loop else _states.size()-2
 	if _current_state_index > max_indx:
 		_current_state_index = 0
-	_get_current_state().start()
+	#_get_current_state().start()
+	var _condition_result = _get_current_state().check_condition()
+	if _condition_result:
+		_get_current_state().start()
+	else:
+		_next_state()
 func force_next_state() -> void:
 	_get_current_state().force_finish_state()
 	_next_state()
