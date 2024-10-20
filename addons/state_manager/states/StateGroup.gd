@@ -32,6 +32,7 @@ func _enter_tree() -> void:
 
 func start() -> void:
 	super()
+	
 	if _states.size() <= 0:
 		_finish_state()
 		return
@@ -45,6 +46,9 @@ func stop() -> void:
 func _get_current_state() -> State:
 	return _states[_current_state_index]
 func get_current_state_tag() -> String:
+	if _get_current_state() is StateGroup:
+		var _current_state = _get_current_state() as StateGroup
+		return _current_state.tag + "/" + _current_state.get_current_state_tag()
 	return _get_current_state().tag
 
 func _add_state_to_loop(state: State) -> void:
@@ -63,12 +67,14 @@ func force_finish_state() -> void:
 
 func _start_state() -> void:
 	while true:
+		if _current_state_index > _states.size()-1:
+			print(_current_state_index)
+			_current_state_index = 0
+			_finish_state()
+			break
+		
 		if _get_current_state().check_condition():
 			_get_current_state().start()
 			break
 		else:
 			_current_state_index += 1
-			if _current_state_index > _states.size()-1:
-				_current_state_index = 0
-				_finish_state()
-				break

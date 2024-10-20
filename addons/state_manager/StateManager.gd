@@ -77,6 +77,9 @@ func _start_current_state() -> void:
 	if _condition_result:
 		_get_current_state().start()
 func get_current_state_tag() -> String:
+	if _get_current_state() is StateGroup:
+		var _current_state = _get_current_state() as StateGroup
+		return _current_state.tag + "/" + _current_state.get_current_state_tag()
 	return _get_current_state().tag
 
 func _next_state() -> void:
