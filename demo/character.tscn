@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cs378gvb4ew6o"]
+[gd_scene load_steps=51 format=3 uid="uid://cs378gvb4ew6o"]
 
 [ext_resource type="Script" path="res://demo/Character.gd" id="1_g01qr"]
 [ext_resource type="Texture2D" uid="uid://bcwpdg5amg0ot" path="res://demo/sprites/idle/idle1.png" id="2_nya23"]
@@ -29,9 +29,13 @@
 [ext_resource type="Texture2D" uid="uid://bkax64tw2b24s" path="res://demo/sprites/walk/walk8.png" id="19_uye0q"]
 [ext_resource type="Texture2D" uid="uid://ct5xxymn8py66" path="res://demo/sprites/jump/jump3.png" id="20_fdjdb"]
 [ext_resource type="Script" path="res://addons/state_manager/StateManager.gd" id="29_cxfat"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/_state_connection_data.gd" id="30_xacga"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/_state_data.gd" id="31_a3414"]
 [ext_resource type="Script" path="res://addons/state_manager/states/StateTimer.gd" id="31_nr1xs"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state.gd" id="32_464it"]
 [ext_resource type="Script" path="res://addons/state_manager/states/StateRandTimer.gd" id="32_tumqd"]
 [ext_resource type="Script" path="res://addons/state_manager/states/State.gd" id="33_ggcl0"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_machine.gd" id="33_jntlk"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qfdj2"]
 animations = [{
@@ -141,8 +145,56 @@ animations = [{
 radius = 11.0
 height = 56.0
 
+[sub_resource type="Resource" id="Resource_tqmhl"]
+script = ExtResource("32_464it")
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_xsbsd"]
+script = ExtResource("31_a3414")
+name = "Start"
+position = Vector2(912, 475)
+state = SubResource("Resource_tqmhl")
+
+[sub_resource type="Resource" id="Resource_1hho5"]
+script = ExtResource("32_464it")
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_3jlmu"]
+script = ExtResource("31_a3414")
+name = "End"
+position = Vector2(1287, 475)
+state = SubResource("Resource_1hho5")
+
+[sub_resource type="Resource" id="Resource_l5ato"]
+script = ExtResource("33_jntlk")
+_states = Array[ExtResource("31_a3414")]([SubResource("Resource_xsbsd"), SubResource("Resource_3jlmu")])
+_connections = Array[ExtResource("30_xacga")]([])
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tda6u"]
 size = Vector2(22, 50)
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_qvn5i"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ol61a"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tlww0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sg0gf"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1cqo8"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_p6cxl"]
+states/End/position = Vector2(1383, 97)
+states/Start/position = Vector2(852, 97)
+states/StateMachine/node = SubResource("AnimationNodeStateMachine_ol61a")
+states/StateMachine/position = Vector2(1364, 17)
+"states/StateMachine 2/node" = SubResource("AnimationNodeStateMachine_qvn5i")
+"states/StateMachine 2/position" = Vector2(1053, 17)
+transitions = ["Start", "End", SubResource("AnimationNodeStateMachineTransition_tlww0"), "StateMachine", "StateMachine 2", SubResource("AnimationNodeStateMachineTransition_sg0gf"), "StateMachine 2", "StateMachine", SubResource("AnimationNodeStateMachineTransition_1cqo8")]
+graph_offset = Vector2(445, -33)
 
 [node name="Character" type="CharacterBody2D" groups=["character"]]
 script = ExtResource("1_g01qr")
@@ -159,6 +211,7 @@ shape = SubResource("CapsuleShape2D_rxrfj")
 
 [node name="StateManager" type="Node" parent="."]
 script = ExtResource("29_cxfat")
+state_machine = SubResource("Resource_l5ato")
 
 [node name="WalkUntilCollide" type="Node" parent="StateManager"]
 script = ExtResource("33_ggcl0")
@@ -193,3 +246,6 @@ offset_right = 640.0
 offset_bottom = 72.0
 theme_override_font_sizes/font_size = 32
 text = "walk_until_collide"
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_p6cxl")

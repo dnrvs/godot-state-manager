@@ -2,6 +2,8 @@
 extends Node
 class_name StateManager
 
+signal state_machine_changed(state_machine)
+
 var _states: Array[State]
 var _current_state_index: int = 0
 var _states_path: Array
@@ -10,15 +12,50 @@ var _is_processing: bool = false
 
 var _has_final_state: bool = false
 
+
+var _current_state: String = "Start"
+
+
+@export var state_machine: StateMachine :
+	set(val):
+		state_machine = val
+		state_machine_changed.emit(state_machine)
 @export var autostart: bool = true
 @export var one_loop: bool = false
+
+@export var condition_expression_base_node: NodePath :
+	set(val):
+		condition_expression_base_node = val
+		if not Engine.is_editor_hint():
+			_cond_base_node = get_tree().current_scene.get_node_or_null(condition_expression_base_node)
+var _cond_base_node: Node
+
+enum CheckMode {AUTO, MANUAL}
+@export var check_mode: CheckMode = CheckMode.AUTO
 
 class _FinalState extends State:
 	pass
 	#func _init() -> void:
 	#	self.condition_callable = func (): return true
 
-func _get_configuration_warnings() -> PackedStringArray:
+func _ready() -> void:
+	if not Engine.is_editor_hint():
+		_cond_base_node = get_tree().current_scene.get_node_or_null(condition_expression_base_node)
+
+func _process(delta: float) -> void:
+	if not Engine.is_editor_hint():
+		if check_mode == CheckMode.AUTO:
+			check_condition()
+
+func check_condition() -> void:
+	if state_machine.check_condition(_current_state, _cond_base_node):
+		var next_state := state_machine.get_next(_current_state, _cond_base_node)
+		if next_state:
+			_current_state = next_state
+
+func get_current_state() -> String:
+	return _current_state
+"""func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
 	
 	if get_child_count() == 0:
@@ -107,4 +144,4 @@ func _on_child_entered_tree(node: Node) -> void:
 		_add_state_to_loop(node)
 
 func _on_state_finished() -> void:
-	_next_state()
+	_next_state()"""

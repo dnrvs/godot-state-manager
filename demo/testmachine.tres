@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="StateMachine" load_steps=9 format=3 uid="uid://dwbw0blgklrpl"]
+
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/_state_data.gd" id="1_52yln"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/_state_connection_data.gd" id="1_hdl5x"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state.gd" id="2_bqyc4"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_machine.gd" id="3_tieah"]
+
+[sub_resource type="Resource" id="Resource_ejaxx"]
+script = ExtResource("2_bqyc4")
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_1f8t0"]
+script = ExtResource("1_52yln")
+name = "Start"
+position = Vector2(962, 330)
+state = SubResource("Resource_ejaxx")
+
+[sub_resource type="Resource" id="Resource_tas6s"]
+script = ExtResource("2_bqyc4")
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_21hl3"]
+script = ExtResource("1_52yln")
+name = "End"
+position = Vector2(1287, 475)
+state = SubResource("Resource_tas6s")
+
+[resource]
+script = ExtResource("3_tieah")
+_states = Array[ExtResource("1_52yln")]([SubResource("Resource_1f8t0"), SubResource("Resource_21hl3")])
+_connections = Array[ExtResource("1_hdl5x")]([])

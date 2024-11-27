@@ -1,0 +1,17 @@
+[gd_resource type="AnimationNodeStateMachine" load_steps=4 format=3 uid="uid://chs8cuutbtb0h"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_y4l1t"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_aik5g"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gugy5"]
+advance_mode = 2
+
+[resource]
+states/Start/position = Vector2(147, 100)
+states/StateMachine/node = SubResource("AnimationNodeStateMachine_y4l1t")
+states/StateMachine/position = Vector2(535.22, 146)
+states/eeeeeeeeeeeeeeeeeeeeeee/node = SubResource("AnimationNodeStateMachine_aik5g")
+states/eeeeeeeeeeeeeeeeeeeeeee/position = Vector2(420.22, 3)
+transitions = ["eeeeeeeeeeeeeeeeeeeeeee", "StateMachine", SubResource("AnimationNodeStateMachineTransition_gugy5")]
+graph_offset = Vector2(-179.03, -35.5)

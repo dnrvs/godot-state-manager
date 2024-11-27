@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://txr8eapacqqd"]
+
+[ext_resource type="Script" path="res://addons/state_manager/ui/vbox_connection.gd" id="1_bindu"]
+[ext_resource type="Texture2D" uid="uid://b6jndexvn8sv1" path="res://addons/state_manager/connection_icon.png" id="2_wjq2e"]
+
+[node name="VboxConnection" type="VBoxContainer"]
+offset_bottom = 20.0
+pivot_offset = Vector2(0, 10)
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+script = ExtResource("1_bindu")
+
+[node name="Out" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="Out"]
+layout_mode = 0
+offset_left = -2.5
+offset_top = -2.5
+offset_right = 2.5
+offset_bottom = 2.5
+texture = ExtResource("2_wjq2e")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="In" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect2" type="TextureRect" parent="In"]
+layout_mode = 0
+offset_left = -2.5
+offset_top = -2.5
+offset_right = 2.5
+offset_bottom = 2.5
+texture = ExtResource("2_wjq2e")
+expand_mode = 1
+stretch_mode = 5

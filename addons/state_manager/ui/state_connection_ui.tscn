@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bb0tcioh2samh"]
+
+[ext_resource type="Script" path="res://addons/state_manager/ui/state_connection_ui.gd" id="1_msuei"]
+[ext_resource type="Texture2D" uid="uid://4su0tpbnh6sl" path="res://icon.png" id="2_muhja"]
+
+[node name="StateConnection" type="Line2D"]
+points = PackedVector2Array(0, 0, 15, 12)
+width = 5.0
+script = ExtResource("1_msuei")
+to_pos = Vector2(15, 12)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(7.5, 6)
+rotation = 0.674741
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_muhja")
+region_rect = Rect2(4.345, 0, 447.683, 470.706)

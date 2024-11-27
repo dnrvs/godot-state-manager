@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3 uid="uid://bf8jaxu74o2t5"]
+
+[ext_resource type="Script" path="res://addons/state_manager/ui/state_connection_control.gd" id="1_ylb3c"]
+[ext_resource type="Texture2D" uid="uid://b6jndexvn8sv1" path="res://addons/state_manager/connection_icon.png" id="2_fi1r6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_45ddj"]
+texture = ExtResource("2_fi1r6")
+
+[node name="StateConnectionControl" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1152.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ylb3c")
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 60.0
+offset_bottom = 60.0
+pivot_offset = Vector2(10, 10)
+mouse_filter = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_45ddj")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
