@@ -53,14 +53,26 @@ func change_state_name(name: String, new_name: String) -> void:
 	state_data.name = new_name
 
 func add_connection(from: String, to: String, state_connection: StateConnection) -> void:
-	for connection in _connections:
-		if connection.from == from and connection.to == to: return
+	if has_connection(from, to):
+		return
 	
 	var connection: _StateConnectionData = _StateConnectionData.new()
 	connection.from = from
 	connection.to = to
 	connection.state_connection = state_connection
 	_connections.append(connection)
+func remove_connection(from: String, to: String) -> void:
+	if not has_connection(from, to):
+		return
+	
+	_connections = _connections.filter(func (connection_data): 
+		return connection_data.from != from and connection_data.to != to
+	)
+func has_connection(from: String, to: String) -> bool:
+	for connection in _connections:
+		if connection.from == from and connection.to == to:
+			return true
+	return false
 
 func check_condition(name: String, base: Object = null) -> bool: 
 	var state = get_state(name)

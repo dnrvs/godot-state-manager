@@ -81,7 +81,9 @@ func _add_new_state() -> void:
 
 func _add_connection(from: String, to: String, connection_ctrl = null) -> void:
 	var connection_control = _state_connection_control.instantiate() if connection_ctrl == null else connection_ctrl
-	if not connection_control.is_inside_tree(): _graph.add_child(connection_control)
+	if not connection_control.is_inside_tree(): 
+		_graph.add_child(connection_control)
+		connection_control.tag = from+">"+to
 	
 	var state_control_from = _get_element_control(from)
 	var state_control_to = _get_element_control(to)
@@ -93,30 +95,8 @@ func _add_connection(from: String, to: String, connection_ctrl = null) -> void:
 	
 	_connections_tags.append({"from": from, "to": to})
 	
-	var update_vboxes = func ():
-		var from_v: Vector2 = (state_control_from.position + (state_control_from.size*0.5))
-		var to_v: Vector2 = (state_control_to.position + (state_control_to.size*0.5))
-		
-		for tag in _connections_tags:
-			if tag.from == to and tag.to == from:
-				var c_angle = from_v.angle_to_point(to_v)
-				var offset = Vector2.UP
-				offset = offset.rotated(c_angle)
-				from_v += offset*15
-				to_v += offset*15
-				break
-		var from_p = _find_exit_point(from_v, to_v, state_control_from)
-		printt(from_v, from_p)
-		var to_p = _find_exit_point(to_v, from_v, state_control_to)
-		
-		if from_p == null or to_p == null:
-			connection_control.visible = false
-		else:
-			connection_control.pos_from = from_p
-			connection_control.pos_to = to_p
-	
-	state_control_from.position_changed.connect(func (_v): update_vboxes.call())
-	state_control_to.position_changed.connect(func (_v): update_vboxes.call())
+	state_control_from.position_changed.connect(func (_v): _update_ui_connection(connection_control, state_control_from, state_control_to))
+	state_control_to.position_changed.connect(func (_v): _update_ui_connection(connection_control, state_control_from, state_control_to))
 	
 	state_control_from.position_changed.emit(state_control_from.position)
 	state_control_to.position_changed.emit(state_control_to.position)
@@ -227,6 +207,26 @@ func clear() -> void:
 	_statemachine = null
 	_graph.visible = false
 
+
+func _update_ui_connection(connection, s_from, s_to):
+		var from_v: Vector2 = (s_from.position + (s_from.size*0.5))
+		var to_v: Vector2 = (s_to.position + (s_to.size*0.5))
+		
+		var c_tags = connection.tag.split(">")
+		if _statemachine.has_connection(c_tags[1], c_tags[0]):
+			var c_angle = from_v.angle_to_point(to_v)
+			var offset = Vector2.UP
+			offset = offset.rotated(c_angle)
+			from_v += offset*15
+			to_v += offset*15
+		var from_p = _find_exit_point(from_v, to_v, s_from)
+		var to_p = _find_exit_point(to_v, from_v, s_to)
+		
+		if from_p == null or to_p == null:
+			connection.visible = false
+		else:
+			connection.pos_from = from_p
+			connection.pos_to = to_p
 func _find_exit_point(from, to, control):
 	var r_start = control.position
 	var r_end = control.position + control.size

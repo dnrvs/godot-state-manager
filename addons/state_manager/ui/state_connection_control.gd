@@ -1,6 +1,8 @@
 @tool
 extends Control
 
+var tag := ""
+
 var _button: Button = null
 var _line_width: float = 5
 var pos_from: Vector2 = Vector2.ZERO :
