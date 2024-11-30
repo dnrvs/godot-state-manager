@@ -149,8 +149,12 @@ func _add_state(state_name: String) -> void:
 	_element_panel_theme.border_width_bottom = 1
 	if state_name == "Start":
 		_element_panel_theme.border_color = Color.ORANGE
+		_element.tag_line_edit.editable = false
+		_element.tag_line_edit.mouse_filter = MOUSE_FILTER_IGNORE
 	elif state_name == "End":
 		_element_panel_theme.border_color = Color.CYAN
+		_element.tag_line_edit.editable = false
+		_element.tag_line_edit.mouse_filter = MOUSE_FILTER_IGNORE
 	else:
 		_element_panel_theme.border_width_left = 0
 		_element_panel_theme.border_width_top = 0
