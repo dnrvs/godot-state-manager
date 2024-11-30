@@ -83,7 +83,7 @@ func _add_connection(from: String, to: String, connection_ctrl = null) -> void:
 	var connection_control = _state_connection_control.instantiate() if connection_ctrl == null else connection_ctrl
 	if not connection_control.is_inside_tree(): 
 		_graph.add_child(connection_control)
-		connection_control.tag = from+">"+to
+	connection_control.tag = from+">"+to
 	
 	var state_control_from = _get_element_control(from)
 	var state_control_to = _get_element_control(to)
@@ -109,26 +109,28 @@ func _add_new_connection() -> void:
 	var _element = _state_connection_control.instantiate()
 	_graph.add_child(_element)
 	
-	_element.pos_from = _current_hovered_state.position + (_current_hovered_state.size*0.5)
-	_element.pos_to = _graph.get_local_mouse_position()
+	
+	#_element.pos_from = _current_hovered_state.position + (_current_hovered_state.size*0.5)
+	#_element.pos_to = _graph.get_local_mouse_position()
+	var from_state = _current_hovered_state
 	var mouse_fn = func (event):
 		if event is InputEventMouseMotion:
-			_element.pos_to = _graph.get_local_mouse_position()
+			_update_ui_connection(
+				_element, from_state, 
+				_graph.get_local_mouse_position() if _current_hovered_state == null else _current_hovered_state
+			)
 	gui_input.connect(mouse_fn)
-	
-	var _old_current_hovered_state = _current_hovered_state
 	
 	while true:
 		var event = await gui_input
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and not event.pressed:
 			break
 	gui_input.disconnect(mouse_fn)
-	if _current_hovered_state != null and _current_hovered_state != _old_current_hovered_state:
+	
+	if _current_hovered_state != null and _current_hovered_state != from_state:
 		var connection = StateConnection.new()
-		#_statemachine.add_connection(_current_hovered_state.tag, _old_current_hovered_state.tag, connection)
-		#connection.state_out = _statemachine.get_state(_old_current_hovered_state.tag)
-		#connection.state_in = _statemachine.get_state(_current_hovered_state.tag)
-		_add_connection(_old_current_hovered_state.tag, _current_hovered_state.tag, _element)
+		_statemachine.add_connection(from_state.tag, _current_hovered_state.tag, connection)
+		_add_connection(from_state.tag, _current_hovered_state.tag, _element)
 	else:
 		_element.queue_free()
 func _add_state(state_name: String) -> void:
@@ -207,27 +209,34 @@ func clear() -> void:
 	_statemachine = null
 	_graph.visible = false
 
-
 func _update_ui_connection(connection, s_from, s_to):
-		var from_v: Vector2 = (s_from.position + (s_from.size*0.5))
-		var to_v: Vector2 = (s_to.position + (s_to.size*0.5))
+		if (
+			connection == null or 
+			not (s_from is Control or s_from is Vector2) or
+			not (s_to is Control or s_to is Vector2)
+		):
+			return
 		
-		var c_tags = connection.tag.split(">")
-		if _statemachine.has_connection(c_tags[1], c_tags[0]):
+		var from_v: Vector2 = (s_from.position + (s_from.size*0.5)) if s_from is Control else s_from
+		var to_v: Vector2 = (s_to.position + (s_to.size*0.5)) if s_to is Control else s_to
+		
+		var c_tags: PackedStringArray = connection.tag.split(">")
+		if not connection.tag.is_empty() and _statemachine.has_connection(c_tags[1], c_tags[0]):
 			var c_angle = from_v.angle_to_point(to_v)
 			var offset = Vector2.UP
 			offset = offset.rotated(c_angle)
 			from_v += offset*15
 			to_v += offset*15
-		var from_p = _find_exit_point(from_v, to_v, s_from)
-		var to_p = _find_exit_point(to_v, from_v, s_to)
+		var from_p = _find_exit_point(from_v, to_v, s_from) if s_from is Control else from_v
+		var to_p = _find_exit_point(to_v, from_v, s_to) if s_to is Control else to_v
 		
-		if from_p == null or to_p == null:
+		if from_p == null and to_p == null:
 			connection.visible = false
 		else:
+			connection.visible = true
 			connection.pos_from = from_p
 			connection.pos_to = to_p
-func _find_exit_point(from, to, control):
+func _find_exit_point(from: Vector2, to: Vector2, control: Control):
 	var r_start = control.position
 	var r_end = control.position + control.size
 	
