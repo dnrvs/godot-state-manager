@@ -3,34 +3,52 @@
 [ext_resource type="Script" path="res://addons/state_manager/ui/state_connection_control.gd" id="1_ylb3c"]
 [ext_resource type="Texture2D" uid="uid://b6jndexvn8sv1" path="res://addons/state_manager/connection_icon.png" id="2_fi1r6"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_45ddj"]
-texture = ExtResource("2_fi1r6")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5cme"]
+resource_local_to_scene = true
+bg_color = Color(1, 1, 1, 1)
+shadow_color = Color(1, 1, 1, 1)
+shadow_size = 2
 
 [node name="StateConnectionControl" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1152.0
-offset_bottom = -648.0
+offset_top = -2.5
+offset_right = -1052.0
+offset_bottom = -645.5
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+pivot_offset = Vector2(0, 2.5)
+focus_mode = 1
+mouse_filter = 1
 script = ExtResource("1_ylb3c")
 
-[node name="Button" type="Button" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n5cme")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-offset_left = 40.0
-offset_top = 40.0
-offset_right = 60.0
-offset_bottom = 60.0
-pivot_offset = Vector2(10, 10)
-mouse_filter = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_45ddj")
-
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-mouse_filter = 2
+texture = ExtResource("2_fi1r6")
+expand_mode = 1
+stretch_mode = 5

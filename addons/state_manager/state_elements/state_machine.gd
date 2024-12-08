@@ -42,6 +42,12 @@ func get_states() -> PackedStringArray:
 	for state_data in _states:
 		states.append(state_data.name)
 	return states
+func get_state_connections(name: String) -> PackedStringArray:
+	var connections: PackedStringArray
+	for connection_data in _connections:
+		if connection_data.from == name:
+			connections.append(connection_data.to)
+	return connections
 func has_state(name: String) -> bool:
 	return get_state(name) != null
 func change_state_name(name: String, new_name: String) -> void:
@@ -68,11 +74,13 @@ func remove_connection(from: String, to: String) -> void:
 	_connections = _connections.filter(func (connection_data): 
 		return connection_data.from != from and connection_data.to != to
 	)
-func has_connection(from: String, to: String) -> bool:
+func get_connection(from: String, to: String) -> StateConnection:
 	for connection in _connections:
 		if connection.from == from and connection.to == to:
-			return true
-	return false
+			return connection.state_connection
+	return null
+func has_connection(from: String, to: String) -> bool:
+	return get_connection(from, to) != null
 
 func check_condition(name: String, base: Object = null) -> bool: 
 	var state = get_state(name)

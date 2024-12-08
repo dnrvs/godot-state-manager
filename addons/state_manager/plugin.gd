@@ -35,26 +35,48 @@ func _enter_tree():
 	
 	state_ui = preload("res://addons/state_manager/ui/state_ui.tscn").instantiate()
 	
+	"""
+	scene_changed.connect(func (scene):
+		print(current_state_manager.get_tree())
+	)
+	"""
+	"""
+	scene_closed.connect(func (scene):
+		print(scene)
+	)
+	"""
+	
 	var editor_selection = EditorInterface.get_selection()
-	#var _updt_machine_fn = func (statemachine): state_ui.load_
 	editor_selection.selection_changed.connect(func ():
 		var selection = editor_selection.get_selected_nodes()
 		
 		if not selection.is_empty() and selection[0] is StateManager:
 			current_state_manager = selection[0]
-			add_control_to_bottom_panel(state_ui, "State Tree")
-			state_ui.load_statemachine(current_state_manager.state_machine)
-			
-			current_state_manager.state_machine_changed.connect(state_ui.load_statemachine)
+			_add_state_tree()
 		elif current_state_manager != null:
-			if current_state_manager.state_machine_changed.is_connected(state_ui.load_statemachine):
-				current_state_manager.state_machine_changed.disconnect(state_ui.load_statemachine)
-			
-			state_ui.clear()
-			remove_control_from_bottom_panel(state_ui)
-			
+			if current_state_manager.is_inside_tree():
+				_remove_state_tree()
 			current_state_manager = null
 	)
+
+func _add_state_tree() -> void:
+	if current_state_manager == null:
+		return
+	
+	add_control_to_bottom_panel(state_ui, "State Tree")
+	state_ui.load_state_machine(current_state_manager.state_machine)
+	
+	current_state_manager.state_machine_changed.connect(state_ui.load_state_machine)
+	current_state_manager.tree_exiting.connect(_remove_state_tree)
+func _remove_state_tree() -> void:
+	if current_state_manager == null:
+		return
+	
+	current_state_manager.state_machine_changed.disconnect(state_ui.load_state_machine)
+	current_state_manager.tree_exiting.disconnect(_remove_state_tree)
+	
+	state_ui.clear()
+	remove_control_from_bottom_panel(state_ui)
 
 func _exit_tree():
 	remove_custom_type("StateManager")

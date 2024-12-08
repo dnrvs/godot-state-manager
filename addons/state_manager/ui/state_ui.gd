@@ -7,7 +7,7 @@ enum AddMode {
 }
 var _add_mode: AddMode = AddMode.STATE
 
-var _statemachine: StateMachine
+var _state_machine: StateMachine
 
 var _state_control = preload("res://addons/state_manager/ui/state_control.tscn")
 var _state_connection_control = preload("res://addons/state_manager/ui/state_connection_control.tscn")
@@ -17,12 +17,12 @@ var _graph: Control = null
 var _add_option: VBoxContainer = null
 var _scroll_graph: ScrollContainer = null
 
-var _current_hovered_state = null
-var _current_added_conection = null
+#var _current_hovered_state = null
+#var _current_added_conection = null
 
 var _drag := false
 
-var _connections_tags = []
+#var _connections_tags = []
 
 func _ready() -> void:
 	_scroll_graph = $VBoxContainer/Control/ScrollContainer
@@ -36,27 +36,6 @@ func _ready() -> void:
 	$VBoxContainer/HBoxContainer/AddConnectionButton.pressed.connect(func ():
 		_add_mode = AddMode.CONNECTION
 	)
-	"""
-	var _add_button_fn = func (_element: PanelContainer): 
-		_graph.add_child(_element)
-		_element.position = get_local_mouse_position()
-		_element.size = Vector2.ZERO
-	_add_option.get_node("AddStateButton").pressed.connect(func ():
-		var _new_state_control: PanelContainer = _state_control.instantiate()
-		_graph.add_child(_new_state_control)
-		_new_state_control.position = get_local_mouse_position()
-		_new_state_control.size = Vector2.ZERO
-		print("NEW")
-	)
-	"""
-	
-	#get_tree().get_nodes_in_group("start_state_control")[0].type = get_tree().get_nodes_in_group("start_state_control")[0].Type.START
-	#get_tree().get_nodes_in_group("end_state_control")[0].type = get_tree().get_nodes_in_group("end_state_control")[0].Type.END
-	
-	#for state in statemachine.get_states():
-	#	_add_element(state, statemachine._get_ui_states_positions()[state.tag])
-
-#func _process(delta: float) -> void: print(get_viewport().gui_get_focus_owner())
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -65,22 +44,76 @@ func _gui_input(event: InputEvent) -> void:
 			match _add_mode:
 				AddMode.STATE: _add_new_state()
 				AddMode.CONNECTION: _add_new_connection()
-			#_add_option.visible = !_add_option.visible
-			#_add_option.position = get_local_mouse_position()
-		#if event.button_index == MOUSE_BUTTON_LEFT and event.pressed: _add_option.visible = false
 	if event is InputEventMouseMotion:
 		if _drag:
 			var _sc = (event as InputEventMouseMotion).screen_relative
 			_scroll_graph.scroll_horizontal -= _sc.x
 			_scroll_graph.scroll_vertical -= _sc.y
+	if event is InputEventKey:
+		if event.keycode == KEY_DELETE and event.pressed and _get_selected_element():
+			accept_event()
+			_get_selected_element().queue_free()
+
+func _add_state(state_name: String) -> void:
+	var state_control: PanelContainer = _state_control.instantiate()
+	
+	_graph.add_child(state_control)
+	state_control.tag = state_name
+	var state_panel_theme: StyleBoxFlat = state_control.get("theme_override_styles/panel")
+	
+	state_panel_theme.border_width_left = 1
+	state_panel_theme.border_width_top = 1
+	state_panel_theme.border_width_right = 1
+	state_panel_theme.border_width_bottom = 1
+	if state_name == "Start":
+		state_panel_theme.border_color = Color.ORANGE
+		state_control.tag_line_edit.editable = false
+		state_control.tag_line_edit.mouse_filter = MOUSE_FILTER_IGNORE
+	elif state_name == "End":
+		state_panel_theme.border_color = Color.CYAN
+		state_control.tag_line_edit.editable = false
+		state_control.tag_line_edit.mouse_filter = MOUSE_FILTER_IGNORE
+	else:
+		state_panel_theme.border_width_left = 0
+		state_panel_theme.border_width_top = 0
+		state_panel_theme.border_width_right = 0
+		state_panel_theme.border_width_bottom = 0
+	
+	state_control.position = _state_machine._get_ui_state_position(state_name)
+	state_control.set_deferred("size", Vector2.ZERO)
+	
+	state_control.tag_line_edit.text_submitted.connect(func (new_text) -> void:
+		EditorInterface.mark_scene_as_unsaved()
+		_state_machine.change_state_name(state_control.tag, new_text)
+		state_control.tag = new_text
+		get_viewport().gui_release_focus()
+	)
+	state_control.position_changed.connect(func (new_pos) -> void:
+		EditorInterface.mark_scene_as_unsaved()
+		_state_machine._set_ui_state_position(state_control.tag, new_pos)
+	)
+	state_control.focus_entered.connect(func () -> void:
+		EditorInterface.inspect_object(_state_machine.get_state(state_control.tag))
+	)
+	state_control.focus_exited.connect(func () -> void:
+		EditorInterface.inspect_object(null)
+	)
+	state_control.tree_exiting.connect(func () -> void:
+		if _state_machine:
+			EditorInterface.mark_scene_as_unsaved()
+			_state_machine.remove_state(state_control.tag)
+	)
 func _add_new_state() -> void:
+	EditorInterface.mark_scene_as_unsaved()
+	
 	var state := NState.new()
-	var state_name := _statemachine._generic_name()
-	_statemachine.add_state(state_name, state, _graph.get_local_mouse_position())
+	var state_name := _state_machine._generic_name()
+	_state_machine.add_state(state_name, state, _graph.get_local_mouse_position())
 	_add_state(state_name)
 
-func _add_connection(from: String, to: String, connection_ctrl = null) -> void:
-	var connection_control = _state_connection_control.instantiate() if connection_ctrl == null else connection_ctrl
+func _add_connection(from: String, to: String, connection_control = null) -> void:
+	if connection_control == null:
+		connection_control = _state_connection_control.instantiate()
 	if not connection_control.is_inside_tree(): 
 		_graph.add_child(connection_control)
 	connection_control.tag = from+">"+to
@@ -93,31 +126,46 @@ func _add_connection(from: String, to: String, connection_ctrl = null) -> void:
 	_graph.add_child(vbox_connection_from)
 	_graph.add_child(vbox_connection_to)
 	
-	_connections_tags.append({"from": from, "to": to})
-	
 	state_control_from.position_changed.connect(func (_v): _update_ui_connection(connection_control, state_control_from, state_control_to))
 	state_control_to.position_changed.connect(func (_v): _update_ui_connection(connection_control, state_control_from, state_control_to))
 	
 	state_control_from.position_changed.emit(state_control_from.position)
 	state_control_to.position_changed.emit(state_control_to.position)
-
+	
+	connection_control.focus_entered.connect(func () -> void:
+		var c_tags: PackedStringArray = connection_control.tag.split(">")
+		EditorInterface.inspect_object(_state_machine.get_connection(c_tags[0],c_tags[1]))
+	)
+	connection_control.focus_exited.connect(func () -> void:
+		EditorInterface.inspect_object(null)
+	)
+	connection_control.tree_exiting.connect(func () -> void:
+		if _state_machine:
+			EditorInterface.mark_scene_as_unsaved()
+			_state_machine.remove_connection(from, to)
+	)
 func _add_new_connection() -> void:
-	if _current_hovered_state == null: return
+	var get_hovered_state = func ():
+		var hovered_element = _get_hovered_element()
+		if hovered_element == null or not _state_machine.has_state(hovered_element.tag):
+			return null
+		return hovered_element
+	
+	var from_state = get_hovered_state.call()
+	if from_state == null: 
+		return
 	
 	EditorInterface.mark_scene_as_unsaved()
 	
-	var _element = _state_connection_control.instantiate()
-	_graph.add_child(_element)
+	var connection_control = _state_connection_control.instantiate()
+	_graph.add_child(connection_control)
 	
-	
-	#_element.pos_from = _current_hovered_state.position + (_current_hovered_state.size*0.5)
-	#_element.pos_to = _graph.get_local_mouse_position()
-	var from_state = _current_hovered_state
 	var mouse_fn = func (event):
 		if event is InputEventMouseMotion:
+			var hovered_state = get_hovered_state.call()
 			_update_ui_connection(
-				_element, from_state, 
-				_graph.get_local_mouse_position() if _current_hovered_state == null else _current_hovered_state
+				connection_control, from_state, 
+				_graph.get_local_mouse_position() if hovered_state == null else hovered_state
 			)
 	gui_input.connect(mouse_fn)
 	
@@ -127,119 +175,83 @@ func _add_new_connection() -> void:
 			break
 	gui_input.disconnect(mouse_fn)
 	
-	if _current_hovered_state != null and _current_hovered_state != from_state:
+	var to_state = get_hovered_state.call()
+	if to_state != null and to_state != from_state:
 		var connection = StateConnection.new()
-		_statemachine.add_connection(from_state.tag, _current_hovered_state.tag, connection)
-		_add_connection(from_state.tag, _current_hovered_state.tag, _element)
+		_state_machine.add_connection(from_state.tag, to_state.tag, connection)
+		_add_connection(from_state.tag, to_state.tag, connection_control)
 	else:
-		_element.queue_free()
-func _add_state(state_name: String) -> void:
-	EditorInterface.mark_scene_as_unsaved()
-	
-	var _element: PanelContainer = _state_control.instantiate()
-	
-	_graph.add_child(_element)
-	_element.tag = state_name
-	var _element_panel_theme: StyleBoxFlat = _element.get("theme_override_styles/panel").duplicate()
-	_element.set("theme_override_styles/panel", _element_panel_theme)
-	
-	_element_panel_theme.border_width_left = 1
-	_element_panel_theme.border_width_top = 1
-	_element_panel_theme.border_width_right = 1
-	_element_panel_theme.border_width_bottom = 1
-	if state_name == "Start":
-		_element_panel_theme.border_color = Color.ORANGE
-		_element.tag_line_edit.editable = false
-		_element.tag_line_edit.mouse_filter = MOUSE_FILTER_IGNORE
-	elif state_name == "End":
-		_element_panel_theme.border_color = Color.CYAN
-		_element.tag_line_edit.editable = false
-		_element.tag_line_edit.mouse_filter = MOUSE_FILTER_IGNORE
-	else:
-		_element_panel_theme.border_width_left = 0
-		_element_panel_theme.border_width_top = 0
-		_element_panel_theme.border_width_right = 0
-		_element_panel_theme.border_width_bottom = 0
-	
-	_element.position = _statemachine._get_ui_state_position(state_name)
-	_element.set_deferred("size", Vector2.ZERO)
-	
-	_element.tag_line_edit.text_submitted.connect(func (new_text) -> void:
-		EditorInterface.mark_scene_as_unsaved()
-		_statemachine.change_state_name(_element.tag, new_text)
-		_element.tag = new_text
-		get_viewport().gui_release_focus()
-	)
-	_element.position_changed.connect(func (new_pos) -> void:
-		EditorInterface.mark_scene_as_unsaved()
-		_statemachine._set_ui_state_position(_element.tag, new_pos)
-	)
-	_element.focus_entered.connect(func () -> void:
-		EditorInterface.inspect_object(_statemachine.get_state(_element.tag))
-	)
-	_element.focus_exited.connect(func () -> void:
-		EditorInterface.inspect_object(null)
-	)
-	_element.mouse_entered.connect(func () -> void:
-		_current_hovered_state = _element
-	)
-	_element.mouse_exited.connect(func () -> void:
-		_current_hovered_state = null
-	)
-	_element.deleted.connect(func () -> void:
-		EditorInterface.mark_scene_as_unsaved()
-		_statemachine.remove_state(_element.tag)
-	)
+		connection_control.queue_free()
+
 func _get_element_control(tag: String) -> Control:
 	for element in _graph.get_children():
 		if "tag" in element and element.tag == tag:
 			return element
 	return null
 
-func load_statemachine(statemachine: StateMachine) -> void:
+func load_state_machine(state_machine: StateMachine) -> void:
 	clear()
-	if statemachine == null: return
+	if state_machine == null: return
 	
-	_statemachine = statemachine
-	for state_name in _statemachine.get_states():
-		_add_state(state_name)
+	_state_machine = state_machine
+	
+	for state in _state_machine.get_states():
+		_add_state(state)
+	for from in _state_machine.get_states():
+		for to in _state_machine.get_state_connections(from):
+			_add_connection.call_deferred(from, to)
+	
 	_graph.visible = true
 	
 	_scroll_graph.set_deferred("scroll_horizontal", _scroll_graph.get_h_scroll_bar().max_value*0.25)
 	_scroll_graph.set_deferred("scroll_vertical", _scroll_graph.get_v_scroll_bar().max_value*0.35)
 func clear() -> void:
+	_state_machine = null
 	for element in _graph.get_children():
 		element.queue_free()
-	_statemachine = null
 	_graph.visible = false
 
+func _get_selected_element():
+	var focused_control := get_viewport().gui_get_focus_owner()
+	if focused_control == null or focused_control.get_parent() != _graph:
+		return null
+	return focused_control
+func _get_hovered_element():
+	var hovered_control := get_viewport().gui_get_hovered_control()
+	if hovered_control == null or not _graph.is_ancestor_of(hovered_control):
+		return null
+	var graph_element = hovered_control
+	while graph_element.get_parent_control() != _graph:
+		graph_element = graph_element.get_parent_control()
+	return graph_element
+
 func _update_ui_connection(connection, s_from, s_to):
-		if (
-			connection == null or 
-			not (s_from is Control or s_from is Vector2) or
-			not (s_to is Control or s_to is Vector2)
-		):
-			return
-		
-		var from_v: Vector2 = (s_from.position + (s_from.size*0.5)) if s_from is Control else s_from
-		var to_v: Vector2 = (s_to.position + (s_to.size*0.5)) if s_to is Control else s_to
-		
-		var c_tags: PackedStringArray = connection.tag.split(">")
-		if not connection.tag.is_empty() and _statemachine.has_connection(c_tags[1], c_tags[0]):
-			var c_angle = from_v.angle_to_point(to_v)
-			var offset = Vector2.UP
-			offset = offset.rotated(c_angle)
-			from_v += offset*15
-			to_v += offset*15
-		var from_p = _find_exit_point(from_v, to_v, s_from) if s_from is Control else from_v
-		var to_p = _find_exit_point(to_v, from_v, s_to) if s_to is Control else to_v
-		
-		if from_p == null and to_p == null:
-			connection.visible = false
-		else:
-			connection.visible = true
-			connection.pos_from = from_p
-			connection.pos_to = to_p
+	if (
+		connection == null or 
+		not (s_from is Control or s_from is Vector2) or
+		not (s_to is Control or s_to is Vector2)
+	):
+		return
+	
+	var from_v: Vector2 = (s_from.position + (s_from.size*0.5)) if s_from is Control else s_from
+	var to_v: Vector2 = (s_to.position + (s_to.size*0.5)) if s_to is Control else s_to
+	
+	var c_tags: PackedStringArray = connection.tag.split(">")
+	if not connection.tag.is_empty() and _state_machine.has_connection(c_tags[1], c_tags[0]):
+		var c_angle = from_v.angle_to_point(to_v)
+		var offset = Vector2.UP
+		offset = offset.rotated(c_angle)
+		from_v += offset*15
+		to_v += offset*15
+	var from_p = _find_exit_point(from_v, to_v, s_from) if s_from is Control else from_v
+	var to_p = _find_exit_point(to_v, from_v, s_to) if s_to is Control else to_v
+	
+	if from_p == null and to_p == null:
+		connection.visible = false
+	else:
+		connection.visible = true
+		connection.pos_from = from_p
+		connection.pos_to = to_p
 func _find_exit_point(from: Vector2, to: Vector2, control: Control):
 	var r_start = control.position
 	var r_end = control.position + control.size

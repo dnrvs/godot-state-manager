@@ -1,19 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://dumoxdtndv2uu"]
+[gd_scene load_steps=4 format=3 uid="uid://dumoxdtndv2uu"]
 
 [ext_resource type="Script" path="res://addons/state_manager/ui/state_control.gd" id="1_e38v0"]
 
 [sub_resource type="Theme" id="Theme_mvsl1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f3g38"]
+resource_local_to_scene = true
 bg_color = Color(0, 0, 0, 0.509804)
 border_color = Color(1, 0.647059, 0, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
-
-[sub_resource type="Theme" id="Theme_tnkjr"]
-VBoxContainer/constants/separation = 10
 
 [node name="StateControl" type="PanelContainer"]
 z_index = 1
@@ -31,28 +29,6 @@ mouse_filter = 1
 theme = SubResource("Theme_mvsl1")
 theme_override_styles/panel = SubResource("StyleBoxFlat_f3g38")
 script = ExtResource("1_e38v0")
-
-[node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="CenterContainer"]
-layout_mode = 2
-theme = SubResource("Theme_tnkjr")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Control"]
-layout_mode = 2
-offset_top = -5.0
-offset_bottom = 5.0
-pivot_offset = Vector2(0, 5)
-theme_override_constants/separation = 10
-alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="Control" type="Control" parent="CenterContainer/Control/VBoxContainer"]
-layout_mode = 2
-
-[node name="Control2" type="Control" parent="CenterContainer/Control/VBoxContainer"]
-layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

@@ -3,24 +3,37 @@ extends Control
 
 var tag := ""
 
-var _button: Button = null
+var _dir_texture: TextureRect = null
+var _panel: Panel = null
+
 var _line_width: float = 5
 var pos_from: Vector2 = Vector2.ZERO :
 	set(val):
 		pos_from = val
-		queue_redraw()
-		_update_button_pos()
-var pos_to: Vector2 = Vector2(100,100) :
+var pos_to: Vector2 = Vector2(100,0) :
 	set(val):
 		pos_to = val
-		queue_redraw()
-		_update_button_pos()
 
 func _ready() -> void:
-	_button = $Button
-func _draw() -> void:
-	draw_polyline([pos_from,pos_to], Color.WHITE, _line_width)
-func _update_button_pos() -> void:
-	var _offset = Vector2(_line_width*2,_line_width*2)
-	_button.position = pos_from.lerp(pos_to, 0.5)-_offset
-	_button.rotation = pos_from.angle_to_point(pos_to)#Transform2D(0,pos_from).looking_at(pos_to).get_rotation()
+	_dir_texture = $CenterContainer/TextureRect
+	_panel = $MarginContainer/Panel
+	
+	size.y = _line_width
+	pivot_offset.y = _line_width*0.5
+	
+	focus_entered.connect(func ():
+		var panel_theme: StyleBoxFlat = _panel.get("theme_override_styles/panel")
+		panel_theme.bg_color = Color("afcaf8")
+		panel_theme.shadow_color = Color("6495ed")
+	)
+	focus_exited.connect(func ():
+		var panel_theme: StyleBoxFlat = _panel.get("theme_override_styles/panel")
+		panel_theme.bg_color = Color.WHITE
+		panel_theme.shadow_color = Color.WHITE
+	)
+func _process(delta: float) -> void:
+	var lds = pos_from.distance_to(pos_to)
+	position = pos_from-pivot_offset
+	size.x = lds
+	
+	rotation = pos_from.angle_to_point(pos_to)

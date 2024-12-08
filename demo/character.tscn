@@ -145,29 +145,29 @@ animations = [{
 radius = 11.0
 height = 56.0
 
-[sub_resource type="Resource" id="Resource_tqmhl"]
+[sub_resource type="Resource" id="Resource_ebvd2"]
 script = ExtResource("32_464it")
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_xsbsd"]
+[sub_resource type="Resource" id="Resource_wbp5i"]
 script = ExtResource("31_a3414")
 name = "Start"
 position = Vector2(912, 475)
-state = SubResource("Resource_tqmhl")
+state = SubResource("Resource_ebvd2")
 
-[sub_resource type="Resource" id="Resource_1hho5"]
+[sub_resource type="Resource" id="Resource_2trtq"]
 script = ExtResource("32_464it")
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_3jlmu"]
+[sub_resource type="Resource" id="Resource_6dhk8"]
 script = ExtResource("31_a3414")
 name = "End"
 position = Vector2(1287, 475)
-state = SubResource("Resource_1hho5")
+state = SubResource("Resource_2trtq")
 
-[sub_resource type="Resource" id="Resource_l5ato"]
+[sub_resource type="Resource" id="Resource_ke1xi"]
 script = ExtResource("33_jntlk")
-_states = Array[ExtResource("31_a3414")]([SubResource("Resource_xsbsd"), SubResource("Resource_3jlmu")])
+_states = Array[ExtResource("31_a3414")]([SubResource("Resource_wbp5i"), SubResource("Resource_6dhk8")])
 _connections = Array[ExtResource("30_xacga")]([])
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tda6u"]
@@ -211,7 +211,7 @@ shape = SubResource("CapsuleShape2D_rxrfj")
 
 [node name="StateManager" type="Node" parent="."]
 script = ExtResource("29_cxfat")
-state_machine = SubResource("Resource_l5ato")
+state_machine = SubResource("Resource_ke1xi")
 
 [node name="WalkUntilCollide" type="Node" parent="StateManager"]
 script = ExtResource("33_ggcl0")
