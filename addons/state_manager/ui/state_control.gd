@@ -1,23 +1,24 @@
 @tool
-extends PanelContainer
+extends "graph_element.gd"
 
 signal tag_changed(tag, new_tag)
-signal deleted
 signal position_changed(pos)
 
+var panel: PanelContainer
 var tag_line_edit: LineEdit
-var tag: String = "" :
-	set(val):
-		tag = val
-		tag_line_edit.text = tag
 
 var _grab := false
 
 var _mouse_position := Vector2.ZERO
 var _offset := Vector2.ZERO
 
+func _set_tag(val) -> void:
+	super(val)
+	tag_line_edit.text = tag
+
 func _ready() -> void:
-	tag_line_edit = $MarginContainer/LineEdit
+	panel = $Panel
+	tag_line_edit = $Panel/MarginContainer/LineEdit
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -28,3 +29,4 @@ func _gui_input(event: InputEvent) -> void:
 		if _grab:
 			position = get_global_mouse_position()+_offset
 			position_changed.emit(position)
+	super(event)

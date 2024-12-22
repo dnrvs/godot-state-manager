@@ -1,7 +1,5 @@
 @tool
-extends Control
-
-var tag := ""
+extends "graph_element.gd"
 
 var _dir_texture: TextureRect = null
 var _panel: Panel = null
@@ -18,7 +16,6 @@ func _ready() -> void:
 	_dir_texture = $CenterContainer/TextureRect
 	_panel = $MarginContainer/Panel
 	
-	size.y = _line_width
 	pivot_offset.y = _line_width*0.5
 	
 	focus_entered.connect(func ():
@@ -34,6 +31,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var lds = pos_from.distance_to(pos_to)
 	position = pos_from-pivot_offset
-	size.x = lds
+	size = Vector2(lds, _line_width)
 	
 	rotation = pos_from.angle_to_point(pos_to)
