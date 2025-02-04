@@ -1,0 +1,129 @@
+[gd_resource type="Resource" script_class="StateMachine" load_steps=28 format=3 uid="uid://yalwhu1wjoqy"]
+
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection_data.gd" id="1_y8fkc"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection.gd" id="2_nifbr"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_data.gd" id="3_nmvhg"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_start.gd" id="4_6i7mb"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_end.gd" id="5_othso"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state.gd" id="6_xvtm8"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_machine.gd" id="7_ts0ws"]
+
+[sub_resource type="Resource" id="Resource_qpb4t"]
+script = ExtResource("2_nifbr")
+priority = 0
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_txi48"]
+script = ExtResource("1_y8fkc")
+from = "Start"
+to = "idle"
+state_connection = SubResource("Resource_qpb4t")
+
+[sub_resource type="Resource" id="Resource_anttp"]
+script = ExtResource("2_nifbr")
+priority = 0
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_e4nnk"]
+script = ExtResource("1_y8fkc")
+from = "idle"
+to = "walk"
+state_connection = SubResource("Resource_anttp")
+
+[sub_resource type="Resource" id="Resource_tyhu7"]
+script = ExtResource("2_nifbr")
+priority = 0
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_1m33r"]
+script = ExtResource("1_y8fkc")
+from = "walk"
+to = "idle"
+state_connection = SubResource("Resource_tyhu7")
+
+[sub_resource type="Resource" id="Resource_mk787"]
+script = ExtResource("2_nifbr")
+priority = 0
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_415gd"]
+script = ExtResource("1_y8fkc")
+from = "idle"
+to = "attack"
+state_connection = SubResource("Resource_mk787")
+
+[sub_resource type="Resource" id="Resource_dod3n"]
+script = ExtResource("2_nifbr")
+priority = 0
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_hj4yr"]
+script = ExtResource("1_y8fkc")
+from = "attack"
+to = "idle"
+state_connection = SubResource("Resource_dod3n")
+
+[sub_resource type="Resource" id="Resource_w2aae"]
+script = ExtResource("4_6i7mb")
+custom_expression_base_node = NodePath("")
+condition_signal = ""
+condition_expression = "true"
+
+[sub_resource type="Resource" id="Resource_3hnj8"]
+script = ExtResource("3_nmvhg")
+name = "Start"
+position = Vector2(724, 477)
+state = SubResource("Resource_w2aae")
+
+[sub_resource type="Resource" id="Resource_wi45i"]
+script = ExtResource("5_othso")
+custom_expression_base_node = NodePath("")
+condition_signal = ""
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_y2luy"]
+script = ExtResource("3_nmvhg")
+name = "End"
+position = Vector2(1411, 487)
+state = SubResource("Resource_wi45i")
+
+[sub_resource type="Resource" id="Resource_sm5mw"]
+script = ExtResource("6_xvtm8")
+custom_expression_base_node = NodePath("")
+condition_signal = ""
+condition_expression = "collided_with_target()"
+
+[sub_resource type="Resource" id="Resource_jho4e"]
+script = ExtResource("3_nmvhg")
+name = "idle"
+position = Vector2(1064, 470)
+state = SubResource("Resource_sm5mw")
+
+[sub_resource type="Resource" id="Resource_7cxwl"]
+script = ExtResource("6_xvtm8")
+custom_expression_base_node = NodePath("")
+condition_signal = ""
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_uce1n"]
+script = ExtResource("3_nmvhg")
+name = "walk"
+position = Vector2(897, 330)
+state = SubResource("Resource_7cxwl")
+
+[sub_resource type="Resource" id="Resource_hsfp1"]
+script = ExtResource("6_xvtm8")
+custom_expression_base_node = NodePath("")
+condition_signal = ""
+condition_expression = ""
+
+[sub_resource type="Resource" id="Resource_4w840"]
+script = ExtResource("3_nmvhg")
+name = "attack"
+position = Vector2(1267, 321)
+state = SubResource("Resource_hsfp1")
+
+[resource]
+script = ExtResource("7_ts0ws")
+_states = Array[ExtResource("3_nmvhg")]([SubResource("Resource_3hnj8"), SubResource("Resource_y2luy"), SubResource("Resource_jho4e"), SubResource("Resource_uce1n"), SubResource("Resource_4w840")])
+_connections = Array[ExtResource("1_y8fkc")]([SubResource("Resource_txi48"), SubResource("Resource_e4nnk"), SubResource("Resource_1m33r"), SubResource("Resource_415gd"), SubResource("Resource_hj4yr")])

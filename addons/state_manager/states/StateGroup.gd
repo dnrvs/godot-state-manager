@@ -1,8 +1,8 @@
 @tool
-extends State
+extends OldState
 class_name StateGroup
 
-var _states: Array[State]
+var _states: Array[OldState]
 var _current_state_index: int = 0
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -11,7 +11,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if get_child_count() <= 0:
 		warnings.append("No State has been added yet.")
 	for child in get_children():
-		if not child is State:
+		if not child is OldState:
 			warnings.append("This state needs to contain other state nodes to function.")
 			break
 	
@@ -26,7 +26,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		child_entered_tree.connect(func (node: Node):
-			assert(node is State)
+			assert(node is OldState)
 			_add_state_to_loop(node)
 		)
 
@@ -43,7 +43,7 @@ func stop() -> void:
 	super()
 	_get_current_state().stop()
 
-func _get_current_state() -> State:
+func _get_current_state() -> OldState:
 	return _states[_current_state_index]
 func get_current_state_tag() -> String:
 	if _get_current_state() is StateGroup:
@@ -51,7 +51,7 @@ func get_current_state_tag() -> String:
 		return _current_state.tag + "/" + _current_state.get_current_state_tag()
 	return _get_current_state().tag
 
-func _add_state_to_loop(state: State) -> void:
+func _add_state_to_loop(state: OldState) -> void:
 	_states.push_back(state)
 	state.finished_state.connect(_on_state_finished)
 

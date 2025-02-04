@@ -1,5 +1,5 @@
 @tool
-extends State
+extends OldState
 #class_name StateCondition
 
 func _init() -> void:

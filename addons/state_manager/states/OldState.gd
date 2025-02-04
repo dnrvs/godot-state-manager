@@ -1,7 +1,7 @@
 @tool
 extends Node
 
-class_name State
+class_name OldState
 
 signal started_state
 signal processing_state
@@ -33,12 +33,12 @@ var _is_finished: bool = false :
 
 
 func _init() -> void:
-	if get_script().get_global_name() == "State":
+	if get_script().get_global_name() == "OldState":
 		condition_callable = func (): return null
 		cancelable = true
 
 func _validate_property(property: Dictionary) -> void:
-	if property.name == "cancelable" and get_script().get_global_name() == "State":
+	if property.name == "cancelable" and get_script().get_global_name() == "OldState":
 		property.usage = PROPERTY_USAGE_NONE
 
 func _get_configuration_warnings() -> PackedStringArray:

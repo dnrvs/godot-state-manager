@@ -2,12 +2,20 @@
 extends Resource
 class_name StateMachine
 
-var _states: Array[_StateData]
-var _connections: Array[_StateConnectionData]
+const StateData = preload("res://addons/state_manager/state_elements/state_data.gd")
+const StateConnectionData = preload("res://addons/state_manager/state_elements/state_connection_data.gd")
+
+var _states: Array[StateData]
+var _connections: Array[StateConnectionData]
+
+var _whitelist: PackedStringArray
 
 func _init() -> void:
-	add_state("Start", NState.new(), Vector2(912, 475))
-	add_state("End", NState.new(), Vector2(1287, 475))
+	add_state("Start", StateStart.new(), Vector2(912, 475))
+	add_state("End", StateEnd.new(), Vector2(1287, 475))
+	
+	_whitelist.append("Start")
+	_whitelist.append("End")
 
 func _validate_property(property: Dictionary) -> void:
 	if (
@@ -16,22 +24,30 @@ func _validate_property(property: Dictionary) -> void:
 	):
 		property.usage = PROPERTY_USAGE_NO_EDITOR
 
-func add_state(name: String, state: NState, ui_position := Vector2.ZERO) -> void:
+func add_state(name: String, state: State, ui_position := Vector2.ZERO) -> void:
 	if has_state(name):
 		push_error(name, " already exists.")
 		return
 	
-	var state_data: _StateData = _StateData.new()
+	var state_data: StateData = StateData.new()
 	state_data.name = name
 	state_data.state = state
 	state_data.position = ui_position
 	_states.append(state_data)
 func remove_state(name: String) -> void:
-	if name == "Start" or name == "End":
+	if not can_be_removed(name):
 		return
-	_states = _states.filter(func (state_data): return state_data.name != name)
-func get_state(name: String) -> NState:
-	var fstate: NState = null
+	
+	for state_index in range(_states.size()):
+		var state = _states[state_index]
+		if state.name == name:
+			_states.remove_at(state_index)
+			break
+	
+	for connection_data in _connections.filter(func (cn): return cn.from == name or cn.to == name):
+		remove_connection(connection_data.from, connection_data.to)
+func get_state(name: String) -> State:
+	var fstate: State = null
 	for state_data in _states:
 		if state_data.name == name: 
 			fstate = state_data.state
@@ -62,7 +78,7 @@ func add_connection(from: String, to: String, state_connection: StateConnection)
 	if has_connection(from, to):
 		return
 	
-	var connection: _StateConnectionData = _StateConnectionData.new()
+	var connection: StateConnectionData = StateConnectionData.new()
 	connection.from = from
 	connection.to = to
 	connection.state_connection = state_connection
@@ -71,9 +87,11 @@ func remove_connection(from: String, to: String) -> void:
 	if not has_connection(from, to):
 		return
 	
-	_connections = _connections.filter(func (connection_data): 
-		return connection_data.from != from and connection_data.to != to
-	)
+	for connection_index in range(_connections.size()):
+		var connection = _connections[connection_index]
+		if connection.from == from and connection.to == to:
+			_connections.remove_at(connection_index)
+			break
 func get_connection(from: String, to: String) -> StateConnection:
 	for connection in _connections:
 		if connection.from == from and connection.to == to:
@@ -84,6 +102,8 @@ func has_connection(from: String, to: String) -> bool:
 
 func check_condition(name: String, base: Object = null) -> bool: 
 	var state = get_state(name)
+	if not state.condition_expression:
+		push_error("No condition expression has been added")
 	
 	var expression := Expression.new()
 	expression.parse(state.condition_expression)
@@ -93,7 +113,7 @@ func check_condition(name: String, base: Object = null) -> bool:
 		return false
 	return result
 func get_next(name: String, base: Object = null) -> String:
-	var finded_connections: Array[_StateConnectionData]
+	var finded_connections: Array[StateConnectionData]
 	
 	for connection_data in _connections:
 		if connection_data.from == name:
@@ -120,8 +140,13 @@ func get_next(name: String, base: Object = null) -> String:
 	
 	return ""
 
-func _get_state_data(name: String) -> _StateData:
-	var fstate_data: _StateData = null
+func can_be_removed(name: String) -> bool:
+	if name in _whitelist:
+		return false
+	return true
+
+func _get_state_data(name: String) -> StateData:
+	var fstate_data: StateData = null
 	for state_data in _states:
 		if state_data.name == name: 
 			fstate_data = state_data

@@ -1,7 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://xdg6qwdxjgoc"]
+[gd_scene load_steps=8 format=3 uid="uid://xdg6qwdxjgoc"]
 
 [ext_resource type="Script" path="res://addons/state_manager/ui/state_ui.gd" id="1_241ub"]
+[ext_resource type="Texture2D" uid="uid://crsdbivl7pdb4" path="res://addons/state_manager/icons/add_icon.png" id="3_11rgc"]
 [ext_resource type="Theme" uid="uid://lfm3a6l13y11" path="res://addons/state_manager/resources/add_option_theme.tres" id="3_d5bql"]
+[ext_resource type="Texture2D" uid="uid://dmkq82d3ckjj4" path="res://addons/state_manager/icons/edit_icon.png" id="3_r7620"]
+[ext_resource type="Texture2D" uid="uid://csjfmo83r8mr0" path="res://addons/state_manager/icons/connect_icon.png" id="5_psaqx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1mqo"]
+bg_color = Color(0, 0, 0, 0.25)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lr4q8"]
+bg_color = Color(1, 1, 1, 0.25)
 
 [node name="StateUi" type="Control"]
 custom_minimum_size = Vector2(0, 300)
@@ -21,18 +39,61 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("3_d5bql")
+theme_override_constants/separation = 5
+
+[node name="EditButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_r7620")
+icon_alignment = 1
+
+[node name="SelectedPanel" type="Panel" parent="VBoxContainer/HBoxContainer/EditButton"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_k1mqo")
 
 [node name="AddStateButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "State"
+icon = ExtResource("3_11rgc")
+icon_alignment = 1
+
+[node name="SelectedPanel" type="Panel" parent="VBoxContainer/HBoxContainer/AddStateButton"]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_k1mqo")
 
 [node name="AddConnectionButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Connection"
+icon = ExtResource("5_psaqx")
+
+[node name="SelectedPanel" type="Panel" parent="VBoxContainer/HBoxContainer/AddConnectionButton"]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_k1mqo")
 
 [node name="Control" type="Control" parent="VBoxContainer"]
 layout_mode = 2
@@ -47,6 +108,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="XAlignmentPanel" type="Panel" parent="VBoxContainer/Control"]
+visible = false
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -2.5
+offset_right = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lr4q8")
+
+[node name="YAlignmentPanel" type="Panel" parent="VBoxContainer/Control"]
+visible = false
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -2.5
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lr4q8")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Control"]
 layout_mode = 1

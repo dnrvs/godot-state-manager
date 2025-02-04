@@ -3,18 +3,18 @@ extends Node
 class_name StateManager
 
 signal state_machine_changed(state_machine)
+signal state_changed(state)
 
-var _states: Array[State]
-var _current_state_index: int = 0
-var _states_path: Array
+#var _states: Array[OldState]
+#var _current_state_index: int = 0
+#var _states_path: Array
 
-var _is_processing: bool = false
+#var _is_processing: bool = false
 
-var _has_final_state: bool = false
+#var _has_final_state: bool = false
 
 
-var _current_state: String = "Start"
-
+var _current_state: String = ""
 
 @export var state_machine: StateMachine :
 	set(val):
@@ -27,20 +27,23 @@ var _current_state: String = "Start"
 	set(val):
 		condition_expression_base_node = val
 		if not Engine.is_editor_hint():
-			_cond_base_node = get_tree().current_scene.get_node_or_null(condition_expression_base_node)
+			if not is_node_ready():
+				await ready
+			_cond_base_node = get_node_or_null(condition_expression_base_node)
 var _cond_base_node: Node
 
 enum CheckMode {AUTO, MANUAL}
 @export var check_mode: CheckMode = CheckMode.AUTO
+var _is_checking: bool = false
 
-class _FinalState extends State:
-	pass
-	#func _init() -> void:
-	#	self.condition_callable = func (): return true
-
+"""
 func _ready() -> void:
 	if not Engine.is_editor_hint():
-		_cond_base_node = get_tree().current_scene.get_node_or_null(condition_expression_base_node)
+		_cond_base_node = get_node(condition_expression_base_node)
+		printt(get_node(condition_expression_base_node))
+"""
+func _ready() -> void:
+	_advance()
 
 func _process(delta: float) -> void:
 	if not Engine.is_editor_hint():
@@ -48,13 +51,35 @@ func _process(delta: float) -> void:
 			check_condition()
 
 func check_condition() -> void:
+	if _is_checking:
+		return
+	_is_checking = true
 	if state_machine.check_condition(_current_state, _cond_base_node):
-		var next_state := state_machine.get_next(_current_state, _cond_base_node)
-		if next_state:
-			_current_state = next_state
+		await _advance()
+	_is_checking = false
 
 func get_current_state() -> String:
 	return _current_state
+
+func _advance() -> void:
+	if not _current_state:
+		_current_state = "Start"
+		state_changed.emit(_current_state)
+		return
+	if _current_state == "End":
+		return
+	
+	var state_signal_name = state_machine.get_state(_current_state).condition_signal
+	if state_signal_name:
+		var state_signal = _cond_base_node.get_indexed(state_signal_name)
+		if state_signal:
+			await state_signal
+		else:
+			push_error("Invalid condition signal")
+	var next_state := state_machine.get_next(_current_state, _cond_base_node)
+	if next_state:
+		_current_state = next_state
+		state_changed.emit(_current_state)
 """func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
 	

@@ -3,30 +3,58 @@ extends "graph_element.gd"
 
 signal tag_changed(tag, new_tag)
 signal position_changed(pos)
+signal position_update(pos)
 
 var panel: PanelContainer
 var tag_line_edit: LineEdit
+var _select_panel: PanelContainer
 
-var _grab := false
+var _old_pos = null
 
-var _mouse_position := Vector2.ZERO
-var _offset := Vector2.ZERO
+func _ready() -> void:
+	set_notify_transform(true)
+	
+	panel = $Panel
+	tag_line_edit = $Panel/MarginContainer/LineEdit
+	_select_panel = $SelectPanel
+	
+	get_viewport().gui_focus_changed.connect(func (control) -> void:
+		if control == self or is_ancestor_of(control):
+			_select_panel.visible = true
+			if tag_line_edit.editable:
+				tag_line_edit.mouse_filter = Control.MOUSE_FILTER_STOP
+		else:
+			_select_panel.visible = false
+			tag_line_edit.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	)
+
+func _process(_delta: float) -> void:
+	if _old_pos != position:
+		position_update.emit(position)
+		_old_pos = position
 
 func _set_tag(val) -> void:
 	super(val)
 	tag_line_edit.text = tag
 
-func _ready() -> void:
-	panel = $Panel
-	tag_line_edit = $Panel/MarginContainer/LineEdit
-
+func grab(to: Vector2) -> void:
+	position = to
+	"""
+	if _offset == null:
+		_offset = position-to
+	position = to+_offset
+	print(get_local_mouse_position())
+	"""
+"""
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_offset = position-get_global_mouse_position()
 			_grab = event.pressed
+			if not event.pressed:
+				position_changed.emit(position)
 	if event is InputEventMouseMotion:
 		if _grab:
 			position = get_global_mouse_position()+_offset
-			position_changed.emit(position)
-	super(event)
+	#super(event)
+"""

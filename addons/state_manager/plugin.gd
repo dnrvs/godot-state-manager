@@ -3,7 +3,7 @@ extends EditorPlugin
 
 # Scripts
 const state_manager = preload("res://addons/state_manager/StateManager.gd")
-const state = preload("res://addons/state_manager/states/State.gd")
+const state = preload("res://addons/state_manager/states/OldState.gd")
 const states = {
 	state_group = preload("res://addons/state_manager/states/StateGroup.gd"),
 	state_condition = preload("res://addons/state_manager/states/StateCondition.gd"),
@@ -27,13 +27,14 @@ func _enter_tree():
 	var feature_profie := EditorFeatureProfile.new()
 	
 	add_custom_type("StateManager", "Node", state_manager, icons.state_manager)
-	add_custom_type("State", "Node", state, icons.state_condition)
-	add_custom_type("StateGroup", "State", states.state_group, icons.state_group)
+	add_custom_type("OldState", "Node", state, icons.state_condition)
+	add_custom_type("StateGroup", "OldState", states.state_group, icons.state_group)
 	#add_custom_type("StateCondition", "State", states.state_condition, icons.state_condition)
 	add_custom_type("StateTimer", "StateTimeBase", states.state_timer, icons.state_timer)
 	add_custom_type("StateRandTimer", "StateTimeBase", states.state_rand_timer, icons.state_timer)
 	
 	state_ui = preload("res://addons/state_manager/ui/state_ui.tscn").instantiate()
+	state_ui._undo_redo = get_undo_redo()
 	
 	"""
 	scene_changed.connect(func (scene):
@@ -80,7 +81,7 @@ func _remove_state_tree() -> void:
 
 func _exit_tree():
 	remove_custom_type("StateManager")
-	remove_custom_type("State")
+	remove_custom_type("OldState")
 	remove_custom_type("StateGroup")
 	#remove_custom_type("StateCondition")
 	remove_custom_type("StateTimer")

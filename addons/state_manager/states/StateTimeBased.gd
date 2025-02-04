@@ -1,4 +1,4 @@
-extends State
+extends OldState
 class_name StateTimeBase
 
 """ This state is made to be the base of other time-based states """

@@ -1,13 +1,16 @@
 @tool
 extends Control
 
+signal removed
+
 enum Type {
 	STATE,
 	CONNECTION
 }
 @export var type: Type
-
+"""
 var main_ui: Control = null
+"""
 
 var tag: String : set = _set_tag
 
@@ -16,6 +19,12 @@ func _set_tag(val) -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventKey:
-		if event.keycode == KEY_DELETE and event.pressed and main_ui.can_be_removed():
+		if event.keycode == KEY_DELETE and event.pressed:
 			accept_event()
-			queue_free()
+			remove()
+
+func grab(to: Vector2) -> void: 
+	pass
+
+func remove() -> void:
+	removed.emit()
