@@ -55,14 +55,19 @@ func _advance() -> void:
 	if _current_state == "End":
 		return
 	
+	var cond_base = _cond_base_node
+	var custom_base = state_machine.get_state(_current_state).custom_expression_base_node
+	if custom_base:
+		cond_base = get_node_or_null(custom_base)
+	
 	var state_signal_name = state_machine.get_state(_current_state).condition_signal
 	if state_signal_name:
-		var state_signal = _cond_base_node.get_indexed(state_signal_name)
+		var state_signal = cond_base.get_indexed(state_signal_name)
 		if state_signal:
 			await state_signal
 		else:
 			push_error("Invalid condition signal")
-	var next_state := state_machine.get_next(_current_state, _cond_base_node)
+	var next_state := state_machine.get_next(_current_state, cond_base)
 	if next_state:
 		_current_state = next_state
 		state_changed.emit(_current_state)
