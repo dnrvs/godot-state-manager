@@ -302,7 +302,8 @@ func _add_graph_connection(connection_name: String) -> void:
 			var to_state = _get_graph_element(to)
 			if to_state:
 				to_state.position_update.disconnect(connection_mv_fn)
-			update_opposite_connection.call()
+			if not from_state == null and not to_state == null:
+				update_opposite_connection.call()
 	)
 
 func _add_element_to_graph(element: Control) -> void:
