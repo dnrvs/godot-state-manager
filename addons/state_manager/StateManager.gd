@@ -56,7 +56,7 @@ func _advance() -> void:
 		return
 	
 	var cond_base = _cond_base_node
-	var custom_base = state_machine.get_state(_current_state).custom_expression_base_node
+	var custom_base = state_machine.get_state(_current_state).custom_condition_expression_base
 	if custom_base:
 		cond_base = get_node_or_null(custom_base)
 	
