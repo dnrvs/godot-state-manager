@@ -21,8 +21,6 @@ var _vbox_connection = preload("res://addons/state_manager/ui/vbox_connection.ts
 var _graph: Control = null
 var _scroll_graph: ScrollContainer = null
 
-#var _xalignment_panel: Panel = null
-#var _yalignment_panel: Panel = null
 var _alignment_panels: Array[Control]
 
 var _drag := false
@@ -60,13 +58,6 @@ func _ready() -> void:
 func _gui_input(event: InputEvent) -> void:
 	if _current_mode == Mode.EDIT:
 		if _current_element != null:
-			"""
-			if event is InputEventKey:
-				print("HOIOA")
-				if event.keycode == KEY_DELETE and event.pressed and can_be_removed(_current_element):
-					accept_event()
-					_current_element.remove()
-			"""
 			if event is InputEventMouseButton:
 				if event.button_index == MOUSE_BUTTON_LEFT:
 					_grab_element = event.pressed
@@ -104,26 +95,6 @@ func _gui_input(event: InputEvent) -> void:
 						add_connection(StateConnection.new())
 	
 	if event is InputEventMouseButton:
-		"""
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if _current_mode == Mode.EDIT:
-				if _current_element != null:
-					_grab_element = event.pressed
-					_offset_grab_element = _current_element.position-get_global_mouse_position()
-					if not event.pressed:
-						for panel in _alignment_panels:
-							panel.visible = false
-						_change_state_position(_current_element.tag, _current_element.position)
-			else:
-				_grab_element = false
-			
-			if _current_mode == Mode.ADD and event.pressed:
-				match _add_mode:
-					ElementType.STATE:
-						add_state(State.new())
-					ElementType.CONNECTION:
-						add_connection(StateConnection.new())
-		"""
 		if event.button_index == MOUSE_BUTTON_MIDDLE: 
 			_drag = event.pressed
 	
@@ -132,28 +103,7 @@ func _gui_input(event: InputEvent) -> void:
 			var _sc = (event as InputEventMouseMotion).screen_relative
 			_scroll_graph.scroll_horizontal -= _sc.x
 			_scroll_graph.scroll_vertical -= _sc.y
-		"""
-		elif _grab_element and _current_element != null:
-			_current_element.grab(get_global_mouse_position()+_offset_grab_element)
-			
-			var states = _graph.get_children().filter(func (e) -> bool: return e.type == ElementType.STATE)
-			for axis in range(2):
-				for element in states:
-					if not _current_element == element:
-						var a_pos = _current_element.global_position[axis]+(_current_element.size[axis]*0.5)
-						var b_pos = element.global_position[axis]+(element.size[axis]*0.5)
-						
-						var distance = abs(a_pos-b_pos)
-						if distance <= 5:
-							_alignment_panels[axis].visible = true
-							_alignment_panels[axis].global_position[axis] = b_pos-_alignment_panels[axis].size[axis]*0.5
-							_current_element.position[axis] = element.position[axis]
-							break
-						else:
-							_alignment_panels[axis].visible = false
-		"""
 
-# Add remove_element for refactorization
 func add_state(state: State, state_name: String = "") -> void:
 	_undo_redo.create_action("Add State")
 	if not state_name:

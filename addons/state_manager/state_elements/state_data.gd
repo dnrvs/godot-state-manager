@@ -1,6 +1,5 @@
 @tool
 extends Resource
-#class_name _StateData
 
 var name: String
 var position: Vector2

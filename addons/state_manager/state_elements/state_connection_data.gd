@@ -1,6 +1,5 @@
 @tool
 extends Resource
-#class_name _StateConnectionData
 
 var from: String
 var to: String

@@ -8,9 +8,6 @@ enum Type {
 	CONNECTION
 }
 @export var type: Type
-"""
-var main_ui: Control = null
-"""
 
 var tag: String : set = _set_tag
 

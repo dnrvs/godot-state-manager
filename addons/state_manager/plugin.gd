@@ -29,23 +29,11 @@ func _enter_tree():
 	add_custom_type("StateManager", "Node", state_manager, icons.state_manager)
 	add_custom_type("OldState", "Node", state, icons.state_condition)
 	add_custom_type("StateGroup", "OldState", states.state_group, icons.state_group)
-	#add_custom_type("StateCondition", "State", states.state_condition, icons.state_condition)
 	add_custom_type("StateTimer", "StateTimeBase", states.state_timer, icons.state_timer)
 	add_custom_type("StateRandTimer", "StateTimeBase", states.state_rand_timer, icons.state_timer)
 	
 	state_ui = preload("res://addons/state_manager/ui/state_ui.tscn").instantiate()
 	state_ui._undo_redo = get_undo_redo()
-	
-	"""
-	scene_changed.connect(func (scene):
-		print(current_state_manager.get_tree())
-	)
-	"""
-	"""
-	scene_closed.connect(func (scene):
-		print(scene)
-	)
-	"""
 	
 	var editor_selection = EditorInterface.get_selection()
 	editor_selection.selection_changed.connect(func ():
@@ -83,7 +71,6 @@ func _exit_tree():
 	remove_custom_type("StateManager")
 	remove_custom_type("OldState")
 	remove_custom_type("StateGroup")
-	#remove_custom_type("StateCondition")
 	remove_custom_type("StateTimer")
 	remove_custom_type("StateRandTimer")
 	

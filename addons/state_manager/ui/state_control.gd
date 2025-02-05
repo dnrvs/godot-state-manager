@@ -39,22 +39,3 @@ func _set_tag(val) -> void:
 
 func grab(to: Vector2) -> void:
 	position = to
-	"""
-	if _offset == null:
-		_offset = position-to
-	position = to+_offset
-	print(get_local_mouse_position())
-	"""
-"""
-func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			_offset = position-get_global_mouse_position()
-			_grab = event.pressed
-			if not event.pressed:
-				position_changed.emit(position)
-	if event is InputEventMouseMotion:
-		if _grab:
-			position = get_global_mouse_position()+_offset
-	#super(event)
-"""
