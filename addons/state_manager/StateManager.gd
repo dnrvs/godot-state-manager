@@ -12,8 +12,6 @@ var _current_state: String = ""
 	set(val):
 		state_machine = val
 		state_machine_changed.emit(state_machine)
-@export var autostart: bool = true
-@export var one_loop: bool = false
 
 @export var condition_expression_base_node: NodePath :
 	set(val):
