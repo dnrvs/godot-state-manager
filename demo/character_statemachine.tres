@@ -1,129 +1,118 @@
-[gd_resource type="Resource" script_class="StateMachine" load_steps=28 format=3 uid="uid://yalwhu1wjoqy"]
+[gd_resource type="Resource" script_class="StateMachine" load_steps=26 format=3 uid="uid://yalwhu1wjoqy"]
 
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection_data.gd" id="1_y8fkc"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection.gd" id="2_nifbr"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_data.gd" id="3_nmvhg"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_start.gd" id="4_6i7mb"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_end.gd" id="5_othso"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state.gd" id="6_xvtm8"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_machine.gd" id="7_ts0ws"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection_data.gd" id="1_rt7x8"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection.gd" id="2_nt3r1"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_data.gd" id="3_o4psm"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_start.gd" id="4_m5p54"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_end.gd" id="5_fuwas"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state.gd" id="6_j8sxl"]
+[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_machine.gd" id="7_fkc0f"]
 
-[sub_resource type="Resource" id="Resource_qpb4t"]
-script = ExtResource("2_nifbr")
+[sub_resource type="Resource" id="Resource_c3vxf"]
+script = ExtResource("2_nt3r1")
 priority = 0
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_txi48"]
-script = ExtResource("1_y8fkc")
+[sub_resource type="Resource" id="Resource_gjjvu"]
+script = ExtResource("1_rt7x8")
 from = "Start"
 to = "idle"
-state_connection = SubResource("Resource_qpb4t")
+state_connection = SubResource("Resource_c3vxf")
 
-[sub_resource type="Resource" id="Resource_anttp"]
-script = ExtResource("2_nifbr")
+[sub_resource type="Resource" id="Resource_5ry8f"]
+script = ExtResource("2_nt3r1")
 priority = 0
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_e4nnk"]
-script = ExtResource("1_y8fkc")
+[sub_resource type="Resource" id="Resource_bq8lt"]
+script = ExtResource("1_rt7x8")
 from = "idle"
 to = "walk"
-state_connection = SubResource("Resource_anttp")
+state_connection = SubResource("Resource_5ry8f")
 
-[sub_resource type="Resource" id="Resource_tyhu7"]
-script = ExtResource("2_nifbr")
+[sub_resource type="Resource" id="Resource_gos3g"]
+script = ExtResource("2_nt3r1")
 priority = 0
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_1m33r"]
-script = ExtResource("1_y8fkc")
+[sub_resource type="Resource" id="Resource_bfnlo"]
+script = ExtResource("1_rt7x8")
 from = "walk"
-to = "idle"
-state_connection = SubResource("Resource_tyhu7")
-
-[sub_resource type="Resource" id="Resource_mk787"]
-script = ExtResource("2_nifbr")
-priority = 0
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_415gd"]
-script = ExtResource("1_y8fkc")
-from = "idle"
 to = "attack"
-state_connection = SubResource("Resource_mk787")
+state_connection = SubResource("Resource_gos3g")
 
-[sub_resource type="Resource" id="Resource_dod3n"]
-script = ExtResource("2_nifbr")
+[sub_resource type="Resource" id="Resource_3ui6w"]
+script = ExtResource("2_nt3r1")
 priority = 0
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_hj4yr"]
-script = ExtResource("1_y8fkc")
+[sub_resource type="Resource" id="Resource_8rjg8"]
+script = ExtResource("1_rt7x8")
 from = "attack"
 to = "idle"
-state_connection = SubResource("Resource_dod3n")
+state_connection = SubResource("Resource_3ui6w")
 
-[sub_resource type="Resource" id="Resource_w2aae"]
-script = ExtResource("4_6i7mb")
+[sub_resource type="Resource" id="Resource_001w6"]
+script = ExtResource("4_m5p54")
 custom_expression_base_node = NodePath("")
 condition_signal = ""
 condition_expression = "true"
 
-[sub_resource type="Resource" id="Resource_3hnj8"]
-script = ExtResource("3_nmvhg")
+[sub_resource type="Resource" id="Resource_1300h"]
+script = ExtResource("3_o4psm")
 name = "Start"
-position = Vector2(724, 477)
-state = SubResource("Resource_w2aae")
+position = Vector2(898, 463)
+state = SubResource("Resource_001w6")
 
-[sub_resource type="Resource" id="Resource_wi45i"]
-script = ExtResource("5_othso")
+[sub_resource type="Resource" id="Resource_j8p1x"]
+script = ExtResource("5_fuwas")
 custom_expression_base_node = NodePath("")
 condition_signal = ""
 condition_expression = ""
 
-[sub_resource type="Resource" id="Resource_y2luy"]
-script = ExtResource("3_nmvhg")
+[sub_resource type="Resource" id="Resource_giue1"]
+script = ExtResource("3_o4psm")
 name = "End"
-position = Vector2(1411, 487)
-state = SubResource("Resource_wi45i")
+position = Vector2(1720, 445)
+state = SubResource("Resource_j8p1x")
 
-[sub_resource type="Resource" id="Resource_sm5mw"]
-script = ExtResource("6_xvtm8")
+[sub_resource type="Resource" id="Resource_aqc2e"]
+script = ExtResource("6_j8sxl")
+custom_expression_base_node = NodePath("")
+condition_signal = "wait_timer:timeout"
+condition_expression = "true"
+
+[sub_resource type="Resource" id="Resource_oi6km"]
+script = ExtResource("3_o4psm")
+name = "idle"
+position = Vector2(1126, 462)
+state = SubResource("Resource_aqc2e")
+
+[sub_resource type="Resource" id="Resource_vym2o"]
+script = ExtResource("6_j8sxl")
 custom_expression_base_node = NodePath("")
 condition_signal = ""
 condition_expression = "collided_with_target()"
 
-[sub_resource type="Resource" id="Resource_jho4e"]
-script = ExtResource("3_nmvhg")
-name = "idle"
-position = Vector2(1064, 470)
-state = SubResource("Resource_sm5mw")
-
-[sub_resource type="Resource" id="Resource_7cxwl"]
-script = ExtResource("6_xvtm8")
-custom_expression_base_node = NodePath("")
-condition_signal = ""
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_uce1n"]
-script = ExtResource("3_nmvhg")
+[sub_resource type="Resource" id="Resource_g7ucj"]
+script = ExtResource("3_o4psm")
 name = "walk"
-position = Vector2(897, 330)
-state = SubResource("Resource_7cxwl")
+position = Vector2(1329, 456)
+state = SubResource("Resource_vym2o")
 
-[sub_resource type="Resource" id="Resource_hsfp1"]
-script = ExtResource("6_xvtm8")
+[sub_resource type="Resource" id="Resource_evaec"]
+script = ExtResource("6_j8sxl")
 custom_expression_base_node = NodePath("")
-condition_signal = ""
-condition_expression = ""
+condition_signal = "animated_sprite:animation_looped"
+condition_expression = "true"
 
-[sub_resource type="Resource" id="Resource_4w840"]
-script = ExtResource("3_nmvhg")
+[sub_resource type="Resource" id="Resource_y5hm2"]
+script = ExtResource("3_o4psm")
 name = "attack"
-position = Vector2(1267, 321)
-state = SubResource("Resource_hsfp1")
+position = Vector2(1335, 348)
+state = SubResource("Resource_evaec")
 
 [resource]
-script = ExtResource("7_ts0ws")
-_states = Array[ExtResource("3_nmvhg")]([SubResource("Resource_3hnj8"), SubResource("Resource_y2luy"), SubResource("Resource_jho4e"), SubResource("Resource_uce1n"), SubResource("Resource_4w840")])
-_connections = Array[ExtResource("1_y8fkc")]([SubResource("Resource_txi48"), SubResource("Resource_e4nnk"), SubResource("Resource_1m33r"), SubResource("Resource_415gd"), SubResource("Resource_hj4yr")])
+script = ExtResource("7_fkc0f")
+_states = Array[ExtResource("3_o4psm")]([SubResource("Resource_1300h"), SubResource("Resource_giue1"), SubResource("Resource_oi6km"), SubResource("Resource_g7ucj"), SubResource("Resource_y5hm2")])
+_connections = Array[ExtResource("1_rt7x8")]([SubResource("Resource_gjjvu"), SubResource("Resource_bq8lt"), SubResource("Resource_bfnlo"), SubResource("Resource_8rjg8")])

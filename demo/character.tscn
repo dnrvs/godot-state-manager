@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://cs378gvb4ew6o"]
+[gd_scene load_steps=40 format=3 uid="uid://cs378gvb4ew6o"]
 
 [ext_resource type="Script" path="res://demo/Character.gd" id="1_g01qr"]
 [ext_resource type="Texture2D" uid="uid://bcwpdg5amg0ot" path="res://demo/sprites/idle/idle1.png" id="2_nya23"]
@@ -29,13 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://bkax64tw2b24s" path="res://demo/sprites/walk/walk8.png" id="19_uye0q"]
 [ext_resource type="Texture2D" uid="uid://ct5xxymn8py66" path="res://demo/sprites/jump/jump3.png" id="20_fdjdb"]
 [ext_resource type="Script" path="res://addons/state_manager/StateManager.gd" id="29_cxfat"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection_data.gd" id="30_p1kbg"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_data.gd" id="31_eml8c"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_connection.gd" id="31_qcb11"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_start.gd" id="32_2mge0"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_end.gd" id="33_cwkwl"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state_machine.gd" id="34_t3kk6"]
-[ext_resource type="Script" path="res://addons/state_manager/state_elements/state.gd" id="35_roju8"]
+[ext_resource type="Resource" uid="uid://yalwhu1wjoqy" path="res://demo/character_statemachine.tres" id="30_lqquf"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qfdj2"]
 animations = [{
@@ -145,115 +139,6 @@ animations = [{
 radius = 11.0
 height = 56.0
 
-[sub_resource type="Resource" id="Resource_c3vxf"]
-script = ExtResource("31_qcb11")
-priority = 0
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_gjjvu"]
-script = ExtResource("30_p1kbg")
-from = "Start"
-to = "idle"
-state_connection = SubResource("Resource_c3vxf")
-
-[sub_resource type="Resource" id="Resource_5ry8f"]
-script = ExtResource("31_qcb11")
-priority = 0
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_bq8lt"]
-script = ExtResource("30_p1kbg")
-from = "idle"
-to = "walk"
-state_connection = SubResource("Resource_5ry8f")
-
-[sub_resource type="Resource" id="Resource_gos3g"]
-script = ExtResource("31_qcb11")
-priority = 0
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_bfnlo"]
-script = ExtResource("30_p1kbg")
-from = "walk"
-to = "attack"
-state_connection = SubResource("Resource_gos3g")
-
-[sub_resource type="Resource" id="Resource_3ui6w"]
-script = ExtResource("31_qcb11")
-priority = 0
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_8rjg8"]
-script = ExtResource("30_p1kbg")
-from = "attack"
-to = "idle"
-state_connection = SubResource("Resource_3ui6w")
-
-[sub_resource type="Resource" id="Resource_001w6"]
-script = ExtResource("32_2mge0")
-custom_expression_base_node = NodePath("")
-condition_signal = ""
-condition_expression = "true"
-
-[sub_resource type="Resource" id="Resource_1300h"]
-script = ExtResource("31_eml8c")
-name = "Start"
-position = Vector2(898, 463)
-state = SubResource("Resource_001w6")
-
-[sub_resource type="Resource" id="Resource_j8p1x"]
-script = ExtResource("33_cwkwl")
-custom_expression_base_node = NodePath("")
-condition_signal = ""
-condition_expression = ""
-
-[sub_resource type="Resource" id="Resource_giue1"]
-script = ExtResource("31_eml8c")
-name = "End"
-position = Vector2(1720, 445)
-state = SubResource("Resource_j8p1x")
-
-[sub_resource type="Resource" id="Resource_aqc2e"]
-script = ExtResource("35_roju8")
-custom_expression_base_node = NodePath("")
-condition_signal = "wait_timer:timeout"
-condition_expression = "true"
-
-[sub_resource type="Resource" id="Resource_oi6km"]
-script = ExtResource("31_eml8c")
-name = "idle"
-position = Vector2(1126, 462)
-state = SubResource("Resource_aqc2e")
-
-[sub_resource type="Resource" id="Resource_vym2o"]
-script = ExtResource("35_roju8")
-custom_expression_base_node = NodePath("")
-condition_signal = ""
-condition_expression = "collided_with_target()"
-
-[sub_resource type="Resource" id="Resource_g7ucj"]
-script = ExtResource("31_eml8c")
-name = "walk"
-position = Vector2(1329, 456)
-state = SubResource("Resource_vym2o")
-
-[sub_resource type="Resource" id="Resource_evaec"]
-script = ExtResource("35_roju8")
-custom_expression_base_node = NodePath("")
-condition_signal = "animated_sprite:animation_looped"
-condition_expression = "true"
-
-[sub_resource type="Resource" id="Resource_y5hm2"]
-script = ExtResource("31_eml8c")
-name = "attack"
-position = Vector2(1335, 348)
-state = SubResource("Resource_evaec")
-
-[sub_resource type="Resource" id="Resource_g8y0q"]
-script = ExtResource("34_t3kk6")
-_states = Array[ExtResource("31_eml8c")]([SubResource("Resource_1300h"), SubResource("Resource_giue1"), SubResource("Resource_oi6km"), SubResource("Resource_g7ucj"), SubResource("Resource_y5hm2")])
-_connections = Array[ExtResource("30_p1kbg")]([SubResource("Resource_gjjvu"), SubResource("Resource_bq8lt"), SubResource("Resource_bfnlo"), SubResource("Resource_8rjg8")])
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tda6u"]
 size = Vector2(22, 50)
 
@@ -295,7 +180,7 @@ shape = SubResource("CapsuleShape2D_rxrfj")
 
 [node name="StateManager" type="Node" parent="."]
 script = ExtResource("29_cxfat")
-state_machine = SubResource("Resource_g8y0q")
+state_machine = ExtResource("30_lqquf")
 condition_expression_base_node = NodePath("..")
 
 [node name="Area2D" type="Area2D" parent="."]
