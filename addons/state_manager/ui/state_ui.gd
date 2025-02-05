@@ -16,7 +16,6 @@ var _state_machine: StateMachine
 
 var _state_control = preload("res://addons/state_manager/ui/state_control.tscn")
 var _state_connection_control = preload("res://addons/state_manager/ui/state_connection_control.tscn")
-var _vbox_connection = preload("res://addons/state_manager/ui/vbox_connection.tscn")
 
 var _graph: Control = null
 var _scroll_graph: ScrollContainer = null

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b6jndexvn8sv1"
-path="res://.godot/imported/connection_icon.png-5132ac4fe3bdb49d81c750ddd1df638b.ctex"
+path="res://.godot/imported/connection_icon.png-c7b7fd88057240e086d64627ff11d68a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/state_manager/connection_icon.png"
-dest_files=["res://.godot/imported/connection_icon.png-5132ac4fe3bdb49d81c750ddd1df638b.ctex"]
+source_file="res://addons/state_manager/icons/connection_icon.png"
+dest_files=["res://.godot/imported/connection_icon.png-c7b7fd88057240e086d64627ff11d68a.ctex"]
 
 [params]
 

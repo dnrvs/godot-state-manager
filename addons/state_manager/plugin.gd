@@ -3,22 +3,9 @@ extends EditorPlugin
 
 # Scripts
 const state_manager = preload("res://addons/state_manager/StateManager.gd")
-const state = preload("res://addons/state_manager/states/OldState.gd")
-const states = {
-	state_group = preload("res://addons/state_manager/states/StateGroup.gd"),
-	state_condition = preload("res://addons/state_manager/states/StateCondition.gd"),
-	state_timer = preload("res://addons/state_manager/states/StateTimer.gd"),
-	state_rand_timer = preload("res://addons/state_manager/states/StateRandTimer.gd")
-}
 
 # Icons
-const icons = {
-	state_manager = preload("res://addons/state_manager/icons/state_manager.png"),
-	state_group = preload("res://addons/state_manager/icons/state_group.png"),
-	state_condition = preload("res://addons/state_manager/icons/state_condition.png"),
-	state_timer = preload("res://addons/state_manager/icons/state_timer.png"),
-	state_rand_timer = preload("res://addons/state_manager/icons/state_rand_timer.png")
-}
+const icon_state_manager = preload("res://addons/state_manager/icons/state_manager.png")
 
 var state_ui: Node = null
 var current_state_manager: StateManager = null
@@ -26,11 +13,7 @@ var current_state_manager: StateManager = null
 func _enter_tree():
 	var feature_profie := EditorFeatureProfile.new()
 	
-	add_custom_type("StateManager", "Node", state_manager, icons.state_manager)
-	add_custom_type("OldState", "Node", state, icons.state_condition)
-	add_custom_type("StateGroup", "OldState", states.state_group, icons.state_group)
-	add_custom_type("StateTimer", "StateTimeBase", states.state_timer, icons.state_timer)
-	add_custom_type("StateRandTimer", "StateTimeBase", states.state_rand_timer, icons.state_timer)
+	add_custom_type("StateManager", "Node", state_manager, icon_state_manager)
 	
 	state_ui = preload("res://addons/state_manager/ui/state_ui.tscn").instantiate()
 	state_ui._undo_redo = get_undo_redo()
@@ -69,10 +52,6 @@ func _remove_state_tree() -> void:
 
 func _exit_tree():
 	remove_custom_type("StateManager")
-	remove_custom_type("OldState")
-	remove_custom_type("StateGroup")
-	remove_custom_type("StateTimer")
-	remove_custom_type("StateRandTimer")
 	
 	remove_control_from_bottom_panel(state_ui)
 	state_ui.queue_free()
