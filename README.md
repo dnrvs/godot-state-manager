@@ -16,46 +16,55 @@ A [Godot](https://godotengine.org/) plugin that adds different states for nodes.
 
 # Usage
 
+### 1. Add a `StateManager` on any node where you want to have states.
+![1](./images/1.gif)
+### 2. Set `State Machine` and `Condition Expression Base` for the expressions.
+![1](./images/2.gif)
+### 3. To edit `StateMachine` select the `StateManager` and go to `State Tree` in the bottom panel.
+![1](./images/3.gif)
+
+# Editing StateMachine
+## Edit Mode
+ In `Edit` mode you can **move** (Click), **change the name** (Double Click) and **delete** (Del) an element.
+![1](./images/4.gif)
+## Add Mode
+ In `Add` mode you can **add a state** (Click).
+![1](./images/5.gif)
+## Connection Mode
+ In `Connection` mode you can **connect** one state to another (Keeping click and dragging to another state).
+![1](./images/6.gif)
+
+# Classes
+
 ## StateManager
-It is the node that will manage the states that have been assigned to it. Add a `StateManager` on any node where you want to have states.
+The node that will manage the states that have been assigned to it.
 
 ### Properties
-- **autostart**: If `true` then the state loop begins automatically at the start.
-- **one_loop**: If `true` then the state loop stops indefinitely when it ends.
+- **state_machine**: The `StateMachine` resource.
+- **condition_expression_base**: The node where the condition expression will be evaluated.
+- **check_mode**: Determine whether the conditions will be evaluated manually or automatically.
 
 ### Methods
-- **start()**:  Starts the state loop.
-- **stop()**: Pauses the state loop.
-- **get_current_state_tag()**: Returns the current state tag.
+- **check_condition()**: Evaluates the condition and advance to the next state in case it is fulfilled.
+- **get_current_state()**: Returns the current state name.
+
+## StateMachine
+The resource containing the states and is managed by `StateManager`. Can be edited from the Editor.
 
 ## State
-Is the base class of all the states. To use a state simply add it as a child of a `StateManager` and configure it (Depending on the type of state). This class is not intended to be added directly to the scene tree.
+The resource of the `State`.
 
 ### Properties
-- **tag**: The tag with which the state will be identified.
+- **custom_condition_expression_base**: An override for the default `condition_expression_base`.
+- **condition_signal**: The signal to await to evaluate the condition. (First wait for the signal and then evaluate the condition)
+- **condition_expression**: The condition to advance to the next state.
 
-### Signals
-- **started_state**: Is emitted every time the state starts.
-- **processing_state**: Is emitted on each frame in which the state is active.
-- **finished_state**: Is emitted every time the state ends.
-
-## StateCondition
-This state will be active until the return value of condition_callable becomes `false` (`true` if **negative_condition** is activated).
+## StateConnection
+Connect one `State` with another. A `State` can have multiple connections.
 
 ### Properties
-- **condition_callable**: It is a callable where the result of the condition will be returned. Should always return boolean values.
-
-## StateTimer
-This state will be active until the specified seconds have passed.
-
-### Properties
-- **wait_time**: The seconds in which the state will be active.
-
-## StateRandTimer
-Similar to StateTimer only the timeout will be a random value from a range specified in **from** and **to**.
-
-## StateGroup
-It is a state where other states are grouped. It will be active as long as its state loop is active. To add a state to it just add it as a child.
+- **priority**: The priority of the connection over another. Useful for multiple connections.
+- **condition_expression**: A condition to evaluate if can advance to the next state. If empty then advance automatically. Useful for multiple connections.
 
 # Assets
 The sprites of the example project were made by [ZeggyGames](https://zegley.itch.io/).
